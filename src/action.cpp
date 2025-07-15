@@ -1,9 +1,9 @@
 #include "action.h"
-#include "player.h"
+#include "entity.h"
 
 MovementAction::MovementAction(int dx, int dy) : Action(), dx_(dx), dy_(dy) {
 }
 
-void MovementAction::Execute(Player& player) const{ 
+void MovementAction::Execute(Entity& player) const{ 
 	player.move(dx_, dy_);
 }

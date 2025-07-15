@@ -1,11 +1,12 @@
 #include <libtcod.hpp>
+#include <libtcod/color.hpp>
 
 #include <memory>
 
 #include "glob_var.h"
 #include "action.h"
 #include "input_handler.h"
-#include "player.h"
+#include "entity.h"
 
 int main(int argc, char* argv[]) {
     tcod::Console console = tcod::Console{SCREEN_WIDTH, SCREEN_HEIGTH};  // Main console.
@@ -26,7 +27,8 @@ int main(int argc, char* argv[]) {
 
     tcod::Context context = tcod::Context(params);
 
-    Player player(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGTH / 2));
+    Entity player(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGTH / 2), '@', tcod::ColorRGB(255, 255, 255));
+    Entity npc(int(SCREEN_WIDTH / 2 - 5), int(SCREEN_HEIGTH / 2), '@', tcod::ColorRGB(255, 255, 0));
 
     EventHandler handler;
     std::unique_ptr<Action> action{ nullptr };
