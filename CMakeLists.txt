@@ -14,6 +14,7 @@ project(
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")  # Save all runtime files to this directory.
 
+
 file(
     GLOB_RECURSE SOURCE_FILES
     CONFIGURE_DEPENDS  # Automatically reconfigure if source files are added/removed.
@@ -23,8 +24,10 @@ file(
 )
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-# Ensure the C++17 standard is available.
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
+# Ensure the C++20 standard is available.
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 # Enforce UTF-8 encoding on MSVC.
 if (MSVC)
