@@ -7,6 +7,7 @@
 #include "glob_var.h"
 #include "entity.h"
 #include "engine.h"
+#include "gamemap.h"
 
 int main(int argc, char* argv[]) {
     tcod::Console console = tcod::Console{SCREEN_WIDTH, SCREEN_HEIGTH};  // Main console.
@@ -27,17 +28,19 @@ int main(int argc, char* argv[]) {
 
     tcod::Context context = tcod::Context(params);
 
+    GameMap gamemap(MAP_WIDTH, MAP_HEIGTH);
+
+
     Entity player(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGTH / 2), '@', tcod::ColorRGB(255, 255, 255));
     Entity npc(int(SCREEN_WIDTH / 2 - 5), int(SCREEN_HEIGTH / 2), '@', tcod::ColorRGB(255, 255, 0));
 
-    EventHandler handler;
     std::unique_ptr<Action> action{ nullptr };
 
     std::vector<Entity> entities{ player, npc };
 
     Entity& player_ref = entities[0];
 
-    Engine engine(entities, handler, player_ref, context, console);
+    Engine engine(entities, player_ref, context, console, gamemap);
 
     while (true) {  // Game loop.
         engine.HandleEvent();

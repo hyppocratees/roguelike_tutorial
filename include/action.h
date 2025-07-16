@@ -1,20 +1,23 @@
 #pragma once
-#include "entity.h"
+#include "gamemap.h"
+
+class Engine;
+class Entity;
 
 class Action {
 public:
-    void virtual Execute(Entity& player) const = 0;
+    void virtual Perform(Engine& engine, Entity& player) const = 0;
 };
 
 class EscapeAction : public Action {
 public:
-    void virtual Execute(Entity& player) const {};
+    void virtual Perform(Engine& engine, Entity& player) const {};
 };
 
 class MovementAction : public Action {
 public:
     MovementAction(int dx, int dy);
-    void virtual Execute(Entity& player) const;
+    void virtual Perform(Engine& engine, Entity& player) const;
     int getdx() const { return dx_; };
     int getdy() const { return dy_; };
 private:
