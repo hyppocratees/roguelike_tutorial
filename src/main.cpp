@@ -2,11 +2,11 @@
 #include <libtcod/color.hpp>
 
 #include <memory>
+#include <vector>
 
 #include "glob_var.h"
-#include "action.h"
-#include "input_handler.h"
 #include "entity.h"
+#include "engine.h"
 
 int main(int argc, char* argv[]) {
     tcod::Console console = tcod::Console{SCREEN_WIDTH, SCREEN_HEIGTH};  // Main console.
@@ -33,16 +33,15 @@ int main(int argc, char* argv[]) {
     EventHandler handler;
     std::unique_ptr<Action> action{ nullptr };
 
+    std::vector<Entity> entities{ player, npc };
+
+    Entity& player_ref = entities[0];
+
+    Engine engine(entities, handler, player_ref, context, console);
+
     while (true) {  // Game loop.
-        console.clear();
-        tcod::print(console, {player.Getx(), player.Gety()}, "@", std::nullopt, std::nullopt);
-
-        action = handler.Dispatch();
-        if (action) {
-            action->Execute(player);
-        }
-
-        context.present(console);  // Updates the visible display.
+        engine.HandleEvent();
+        engine.Render();
 
     }
 }

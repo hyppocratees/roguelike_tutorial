@@ -8,5 +8,5 @@ class EventHandler {
 public:
 	std::unique_ptr<Action> Dispatch() const;
 private:
-	std::unique_ptr<Action> ev_keydown(const SDL_Event& event) const;
+	std::unique_ptr<Action> EvKeydown(const SDL_Event& event) const;
 };

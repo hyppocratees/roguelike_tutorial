@@ -12,12 +12,12 @@ std::unique_ptr<Action> EventHandler::Dispatch() const
 	SDL_PollEvent(&event);
 	std::unique_ptr<Action> game_event = nullptr;
 	if (event.type == SDL_EVENT_KEY_DOWN)
-		game_event = ev_keydown(event);
+		game_event = EvKeydown(event);
 
 	return game_event;
 }
 
-std::unique_ptr<Action> EventHandler::ev_keydown(const SDL_Event& event) const
+std::unique_ptr<Action> EventHandler::EvKeydown(const SDL_Event& event) const
 {
 	std::unique_ptr<Action> action = nullptr;
 
