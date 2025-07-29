@@ -10,6 +10,7 @@ public:
 	void Render(tcod::Console& cons);
 	void Update();
 	tile GetTile(int col, int line) const { return tiles_[line * width_ + col]; };
+	void SetTile(int col, int line, tile tiletype) { tiles_[line * width_ + col] = tiletype; };
 private:
 	int width_;
 	int height_;

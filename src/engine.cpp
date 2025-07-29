@@ -2,7 +2,7 @@
 #include "input_handler.h"
 #include "gamemap.h"
 
-Engine::Engine(std::vector<Entity>& entities, Entity& player, tcod::Context& context, tcod::Console& console, GameMap& map) : entities_(entities), handler_(EventHandler(*this)), player_(player), context_(context), console_(console), map_(map)
+Engine::Engine(std::vector<Entity>& entities, Entity& player, tcod::Context& context, tcod::Console& console, GameMap& map) : entities_(entities), handler_(EventHandler(*this)), player_(player), context_(context), console_(console), map_(map), isrunning_(true)
 {
 }
 

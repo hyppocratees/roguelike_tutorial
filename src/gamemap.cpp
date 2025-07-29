@@ -4,10 +4,7 @@
 GameMap::GameMap(int width, int height) : width_(width), height_(height)
 {
 	tiles_.reserve(width_ * height_);
-	tiles_.assign(width_ * height_, tfloor);
-	tiles_.at(22 * width_ + 30) = twall;
-	tiles_.at(22 * width_ + 31) = twall;
-	tiles_.at(22 * width_ + 32) = twall;
+	tiles_.assign(width_ * height_, twall);
 	console_ = tcod::Console(width_, height_);
 }
 

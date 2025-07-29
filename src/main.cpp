@@ -8,6 +8,7 @@
 #include "entity.h"
 #include "engine.h"
 #include "gamemap.h"
+#include "procgen.h"
 
 int main(int argc, char* argv[]) {
     tcod::Console console = tcod::Console{SCREEN_WIDTH, SCREEN_HEIGTH};  // Main console.
@@ -30,6 +31,9 @@ int main(int argc, char* argv[]) {
 
     GameMap gamemap(MAP_WIDTH, MAP_HEIGTH);
 
+    MapGenerator mapgen(MAP_WIDTH, MAP_HEIGTH);
+
+    mapgen.Generate(gamemap);
 
     Entity player(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGTH / 2), '@', tcod::ColorRGB(255, 255, 255));
     Entity npc(int(SCREEN_WIDTH / 2 - 5), int(SCREEN_HEIGTH / 2), '@', tcod::ColorRGB(255, 255, 0));
@@ -42,7 +46,7 @@ int main(int argc, char* argv[]) {
 
     Engine engine(entities, player_ref, context, console, gamemap);
 
-    while (true) {  // Game loop.
+    while (engine.IsRunning()) {  // Game loop.
         engine.HandleEvent();
         engine.Render();
 

@@ -11,7 +11,7 @@ public:
 
 class EscapeAction : public Action {
 public:
-    void virtual Perform(Engine& engine, Entity& player) const {};
+    void virtual Perform(Engine& engine, Entity& player) const;
 };
 
 class MovementAction : public Action {

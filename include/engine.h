@@ -19,6 +19,9 @@ public:
 
 	GameMap& GetMap() const { return map_; };
 
+	bool IsRunning() const { return isrunning_; };
+	void Quit() { isrunning_ = false; };
+
 private:
 	tcod::Context& context_;
 	tcod::Console& console_;
@@ -26,4 +29,5 @@ private:
 	EventHandler handler_;
 	Entity& player_;
 	GameMap& map_;
+	bool isrunning_;
 };

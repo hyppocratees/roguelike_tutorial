@@ -3,6 +3,10 @@
 #include "gamemap.h"
 #include "engine.h"
 
+void EscapeAction::Perform(Engine& engine, Entity& player) const {
+	engine.Quit();
+}
+
 MovementAction::MovementAction(int dx, int dy) : Action(), dx_(dx), dy_(dy) {
 }
 
