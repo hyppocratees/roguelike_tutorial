@@ -1,9 +1,11 @@
 #include "engine.h"
 #include "input_handler.h"
 #include "gamemap.h"
+#include "glob_var.h"
 
 Engine::Engine(std::vector<Entity>& entities, Entity& player, tcod::Context& context, tcod::Console& console, GameMap& map) : entities_(entities), handler_(EventHandler(*this)), player_(player), context_(context), console_(console), map_(map), isrunning_(true)
 {
+	UpdateFov();
 }
 
 void Engine::HandleEvent()
@@ -12,6 +14,7 @@ void Engine::HandleEvent()
 
 	if (action) {
 		action->Perform(*this, player_);
+		UpdateFov();
 	}
 
 }
@@ -29,4 +32,9 @@ void Engine::Render()
 
 	console_.clear();
 
+}
+
+void Engine::UpdateFov() const
+{
+	map_.UpdateFov(player_.GetX(), player_.GetY(), FOV_RADIUS);
 }

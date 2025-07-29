@@ -10,7 +10,7 @@ class Entity;
 
 class RectangleRoom {
 public:
-	RectangleRoom(int x, int y, int width, int height) : x1_(x), x2_(x + width), y1_(y), y2_(y + height){};
+	RectangleRoom(int x, int y, int width, int height) : x1_(x), x2_(x + height), y1_(y), y2_(y + width){};
 	std::pair<int, int> Center() const;
 	std::pair<std::vector<int>, std::vector<int>> Inner() const;
 	bool Intersect(const RectangleRoom& room) const;

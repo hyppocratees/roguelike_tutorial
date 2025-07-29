@@ -22,6 +22,8 @@ public:
 	bool IsRunning() const { return isrunning_; };
 	void Quit() { isrunning_ = false; };
 
+	void UpdateFov() const;
+
 private:
 	tcod::Context& context_;
 	tcod::Console& console_;
