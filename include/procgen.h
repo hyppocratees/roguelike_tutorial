@@ -5,12 +5,15 @@
 
 #include "gamemap.h"
 
+class Entity;
+
 
 class RectangleRoom {
 public:
 	RectangleRoom(int x, int y, int width, int height) : x1_(x), x2_(x + width), y1_(y), y2_(y + height){};
 	std::pair<int, int> Center() const;
 	std::pair<std::vector<int>, std::vector<int>> Inner() const;
+	bool Intersect(const RectangleRoom& room) const;
 private:
 	int x1_;
 	int x2_;
@@ -20,9 +23,16 @@ private:
 
 class MapGenerator {
 public:
-	MapGenerator(int map_height, int map_width) : map_height_(map_height), map_width_(map_width) {};
-	void Generate(GameMap& gamemap) const;
+	MapGenerator(int map_height, int map_width, int room_min_size, int room_max_size, int max_rooms);
+	void Generate(GameMap& gamemap, Entity& player) const;
+private:
+	void GenerateRoom(GameMap& gamemap,const RectangleRoom& room) const;
+	void GenerateTunnel(GameMap& gamemap, std::pair<int, int> start, std::pair<int, int> end) const;
+	std::vector<std::pair<int, int>> TunnelBetween(std::pair<int, int> start, std::pair<int, int> end) const;
 private:
 	int map_height_;
 	int map_width_;
+	int room_min_size_;
+	int room_max_size_;
+	int max_rooms_;
 };

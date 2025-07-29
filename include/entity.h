@@ -7,6 +7,8 @@ public:
 	void Move(int dx, int dy) { x_ += dx; y_ += dy; };
 	int GetX() const { return x_; };
 	int GetY() const { return y_; };
+	void SetX(int x) { x_ = x; };
+	void SetY(int y) { y_ = y; };
 	char GetChar() const { return char_; };
 	tcod::ColorRGB GetColor() const { return color_; };
 private:
