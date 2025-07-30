@@ -83,7 +83,7 @@ MapGenerator::MapGenerator(int map_height, int map_width, int room_min_size, int
 {
 }
 
-void MapGenerator::Generate(GameMap& gamemap, Entity& player) const
+void MapGenerator::Generate(GameMap& gamemap) const
 {
 
 	std::vector<RectangleRoom> rooms{};
@@ -109,12 +109,11 @@ void MapGenerator::Generate(GameMap& gamemap, Entity& player) const
 			int px, py;
 			px = room.Center().first;
 			py = room.Center().second;
-			player.SetX(px);
-			player.SetY(py);
 		}
 		else {
 			GenerateTunnel(gamemap, room.Center(), rooms.back().Center());
 		}
 		rooms.push_back(room);
+		gamemap.AddRoom(room);
 	}
 }

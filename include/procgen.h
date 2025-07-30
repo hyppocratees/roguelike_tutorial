@@ -14,6 +14,10 @@ public:
 	std::pair<int, int> Center() const;
 	std::pair<std::vector<int>, std::vector<int>> Inner() const;
 	bool Intersect(const RectangleRoom& room) const;
+	int GetX1() const { return x1_; };
+	int GetX2() const { return x2_; };
+	int GetY1() const { return y1_; };
+	int GetY2() const { return y2_; };
 private:
 	int x1_;
 	int x2_;
@@ -24,7 +28,7 @@ private:
 class MapGenerator {
 public:
 	MapGenerator(int map_height, int map_width, int room_min_size, int room_max_size, int max_rooms);
-	void Generate(GameMap& gamemap, Entity& player) const;
+	void Generate(GameMap& gamemap) const;
 private:
 	void GenerateRoom(GameMap& gamemap,const RectangleRoom& room) const;
 	void GenerateTunnel(GameMap& gamemap, std::pair<int, int> start, std::pair<int, int> end) const;

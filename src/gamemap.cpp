@@ -1,6 +1,7 @@
 #include "gamemap.h"
 #include <vector>
 #include <libtcod/fov.hpp>
+#include "procgen.h"
 
 GameMap::GameMap(int width, int height) : width_(width), height_(height), map_(width_, height_)
 {
@@ -38,6 +39,16 @@ bool GameMap::IsExplored(int col, int line) const
 void GameMap::SetExplored(int col, int line, bool isexplored)
 {
 	tiles_.at(line * width_ + col).explored = isexplored;
+}
+
+void GameMap::AddRoom(RectangleRoom room)
+{
+	rooms_.push_back(room);
+}
+
+RectangleRoom& GameMap::GetRoom(int index)
+{
+	return rooms_.at(index);
 }
 
 void GameMap::Update() {

@@ -12,3 +12,5 @@ constexpr int ROOM_MIN_SIZE = 6;
 constexpr int MAX_ROOMS = 30;
 
 constexpr int FOV_RADIUS = 8;
+
+constexpr int MAX_MONSTER_PER_ROOM = 2;

@@ -4,6 +4,8 @@
 #include <vector>
 #include <libtcod/fov.hpp>
 
+class RectangleRoom;
+
 class GameMap {
 public:
 	GameMap(int width, int height);
@@ -16,10 +18,14 @@ public:
 	void UpdateFov(int x, int y, int radius);
 	bool IsExplored(int col, int line) const;
 	void SetExplored(int col, int line, bool isexplored);
+	void AddRoom(RectangleRoom room);
+	RectangleRoom& GetRoom(int index);
+	std::vector<RectangleRoom>& GetRooms() { return rooms_; };
 private:
 	int width_;
 	int height_;
 	std::vector<tile> tiles_;
+	std::vector<RectangleRoom> rooms_{};
 	tcod::Console console_;
 	TCODMap map_;
 };

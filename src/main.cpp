@@ -33,20 +33,7 @@ int main(int argc, char* argv[]) {
 
     MapGenerator mapgen(MAP_WIDTH, MAP_HEIGTH, ROOM_MIN_SIZE, ROOM_MAX_SIZE, MAX_ROOMS);
 
-
-    Entity player(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGTH / 2), '@', tcod::ColorRGB(255, 255, 255));
-    Entity npc(int(SCREEN_WIDTH / 2 - 5), int(SCREEN_HEIGTH / 2), '@', tcod::ColorRGB(255, 255, 0));
-
-    std::unique_ptr<Action> action{ nullptr };
-
-    std::vector<Entity> entities{ player, npc };
-
-    Entity& player_ref = entities[0];
-
-
-    mapgen.Generate(gamemap, player_ref);
-
-    Engine engine(entities, player_ref, context, console, gamemap);
+    Engine engine(context, console, gamemap, mapgen);
 
     while (engine.IsRunning()) {  // Game loop.
         engine.HandleEvent();
