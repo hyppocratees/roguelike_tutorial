@@ -28,11 +28,6 @@ bool GameMap::IsInFov(int col, int line) const
 void GameMap::UpdateFov(int x, int y, int radius)
 {
 	map_.computeFov(x, y, radius);
-	for (int x = 0; x < width_; ++x ){
-		for (int y = 0; y < height_; ++y) {
-			if (IsInFov(x, y)) tiles_.at(y * width_ + x).explored = true;
-		}
-	}
 }
 
 bool GameMap::IsExplored(int col, int line) const
@@ -49,6 +44,7 @@ void GameMap::Update() {
 	for (int x = 0; x < width_; ++x) {
 		for (int y = 0; y < height_; ++y) {
 			if (IsInFov(x, y)) {
+				tiles_.at(y * width_ + x).explored = true;
 				console_.at(x, y).ch = tiles_.at(y * width_ + x).light.ch;
 				console_.at(x, y).fg = tiles_.at(y * width_ + x).light.fg;
 				continue;
@@ -68,7 +64,7 @@ void GameMap::Update() {
 void GameMap::SetTile(int col, int line, tile tiletype)
 {
 	tiles_[line * width_ + col] = tiletype;
-	map_.setProperties(line, col, tiletype.transparent, tiletype.walkable);
+	map_.setProperties(col, line, tiletype.transparent, tiletype.walkable);
 }
 
 
