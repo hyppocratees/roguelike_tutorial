@@ -32,9 +32,9 @@ void EntityManager::PlaceEntities(RectangleRoom& room, int max_monster_per_room,
 		int y = random.getInt(room.GetY1() + 1, room.GetY2() - 1);
 
 		if (GetBlockingEntity(x, y)) continue;
-
-		if (random.getFloat(0, 1) < 0.8) Spawn(ORC, {x, y}); 
+		if (random.getFloat(0, 1) < 0.8) Spawn(ORC, {x, y});
 		else Spawn(TROLL, {x, y});
+ 
 	}
 }
 

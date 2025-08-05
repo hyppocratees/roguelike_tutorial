@@ -58,6 +58,7 @@ void Engine::PlaceEntities()
 	for (RectangleRoom& room : rooms) {
 		entities_.PlaceEntities(room, MAX_MONSTER_PER_ROOM, random);
 	}
+	for (Entity& entity : entities_) entity.SetMap(&map_);
 	player_ = &entities_.Get(0);
 }
 

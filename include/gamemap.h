@@ -21,6 +21,7 @@ public:
 	void AddRoom(RectangleRoom room);
 	RectangleRoom& GetRoom(int index);
 	std::vector<RectangleRoom>& GetRooms() { return rooms_; };
+	TCODMap* GetMap() { return &map_; };
 private:
 	int width_;
 	int height_;
