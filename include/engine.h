@@ -27,6 +27,7 @@ public:
 	void UpdateFov() const;
 	void PlaceEntities();
 	void HandleEnemyTurn();
+	Entity* GetPlayer() { return player_; };
 
 private:
 	tcod::Context& context_;

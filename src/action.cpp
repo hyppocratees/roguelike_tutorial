@@ -6,28 +6,28 @@
 
 #include <iostream>
 
-void EscapeAction::Perform(Engine& engine, Entity& player) const {
+void EscapeAction::Perform(Engine& engine) const {
 	engine.Quit();
 }
 
-MovementAction::MovementAction(int dx, int dy) : ActionWithDirection(dx, dy){
+MovementAction::MovementAction(Entity& entity, int dx, int dy) : ActionWithDirection(entity, dx, dy){
 }
 
-ActionWithDirection::ActionWithDirection(int dx, int dy) : dx_(dx), dy_(dy)
+ActionWithDirection::ActionWithDirection(Entity& entity, int dx, int dy) : dx_(dx), dy_(dy), entity_(entity)
 {
 }
 
-MeleeAction::MeleeAction(int dx, int dy) : ActionWithDirection(dx, dy)
+MeleeAction::MeleeAction(Entity& entity, int dx, int dy) : ActionWithDirection(entity, dx, dy)
 {
 }
 
-BumpAction::BumpAction(int dx, int dy) : ActionWithDirection(dx, dy)
+BumpAction::BumpAction(Entity& entity, int dx, int dy) : ActionWithDirection(entity, dx, dy)
 {
 }
 
-void MovementAction::Perform(Engine& engine, Entity& player) const{
-	int dest_x = player.GetX() + dx_;
-	int dest_y = player.GetY() + dy_;
+void MovementAction::Perform(Engine& engine) const{
+	int dest_x = entity_.GetX() + dx_;
+	int dest_y = entity_.GetY() + dy_;
 	if (!engine.GetMap().Inbound(dest_x, dest_y)) {
 		return;
 	}
@@ -37,23 +37,23 @@ void MovementAction::Perform(Engine& engine, Entity& player) const{
 	if (engine.GetEntities().GetBlockingEntity(dest_x, dest_y)) {
 		return;
 	}
-	player.Move(dx_, dy_);
+	entity_.Move(dx_, dy_);
 }
 
-void MeleeAction::Perform(Engine& engine, Entity& player) const {
-	int dest_x = player.GetX() + dx_;
-	int dest_y = player.GetY() + dy_;
+void MeleeAction::Perform(Engine& engine) const {
+	int dest_x = entity_.GetX() + dx_;
+	int dest_y = entity_.GetY() + dy_;
 	Entity* target = engine.GetEntities().GetBlockingEntity(dest_x, dest_y);
 	if (!target) return; // no entity
 	std::cout << "you kick " << target->GetName() << " much to it's annoyance" << std::endl;
 }
 
 
-void BumpAction::Perform(Engine& engine, Entity& player) const {
-	int dest_x = player.GetX() + dx_;
-	int dest_y = player.GetY() + dy_;
+void BumpAction::Perform(Engine& engine) const {
+	int dest_x = entity_.GetX() + dx_;
+	int dest_y = entity_.GetY() + dy_;
 	if (engine.GetEntities().GetBlockingEntity(dest_x, dest_y)) {
-		return MeleeAction(dx_, dy_).Perform(engine, player);
+		return MeleeAction(entity_, dx_, dy_).Perform(engine);
 	}
-	return MovementAction(dx_, dy_).Perform(engine, player);
+	return MovementAction(entity_, dx_, dy_).Perform(engine);
 }

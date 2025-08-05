@@ -1,44 +1,45 @@
 #pragma once
 #include "gamemap.h"
+#include "entity.h"
 
 class Engine;
-class Entity;
 
 class Action {
 public:
-    void virtual Perform(Engine& engine, Entity& player) const = 0;
+    void virtual Perform(Engine& engine) const = 0;
 };
 
 class EscapeAction : public Action {
 public:
-    void virtual Perform(Engine& engine, Entity& player) const;
+    void virtual Perform(Engine& engine) const;
 };
 class ActionWithDirection : public Action {
 public:
-    ActionWithDirection(int dx, int dy);
-    void virtual Perform(Engine& engine, Entity& player) const = 0;
+    ActionWithDirection(Entity& entity, int dx, int dy);
+    void virtual Perform(Engine& engine) const = 0;
     virtual int getdx() const { return dx_; };
     virtual int getdy() const { return dy_; };
 protected:
     int dx_;
     int dy_;
+    Entity& entity_;
 };
 
 
 class MovementAction : public ActionWithDirection {
 public:
-    MovementAction(int dx, int dy);
-    void virtual Perform(Engine& engine, Entity& player) const;
+    MovementAction(Entity& entity, int dx, int dy);
+    void virtual Perform(Engine& engine) const;
 };
 
 class MeleeAction : public ActionWithDirection {
 public:
-    MeleeAction(int dx, int dy);
-    void virtual Perform(Engine& engine, Entity& player) const;
+    MeleeAction(Entity& entity, int dx, int dy);
+    void virtual Perform(Engine& engine) const;
 };
 
 class BumpAction : public ActionWithDirection {
 public:
-    BumpAction(int dx, int dy);
-    void virtual Perform(Engine& engine, Entity& player) const;
+    BumpAction(Entity& entity, int dx, int dy);
+    void virtual Perform(Engine& engine) const;
 };

@@ -14,6 +14,9 @@ std::unique_ptr<Action> EventHandler::Dispatch() const
 	std::unique_ptr<Action> game_event = nullptr;
 	if (event.type == SDL_EVENT_KEY_DOWN)
 		game_event = EvKeydown(event);
+	if (event.type == SDL_EVENT_QUIT) {
+		game_event = std::make_unique<EscapeAction>();
+	}
 
 	return game_event;
 }
@@ -25,19 +28,19 @@ std::unique_ptr<Action> EventHandler::EvKeydown(const SDL_Event& event) const
 	switch (event.key.key) {
 	case SDLK_2:
 	case SDLK_DOWN:
-		action = std::make_unique<BumpAction>(0, 1);
+		action = std::make_unique<BumpAction>(*engine_.GetPlayer(), 0, 1);
 		break;
 	case SDLK_4:
 	case SDLK_LEFT:
-		action = std::make_unique<BumpAction>(-1, 0);
+		action = std::make_unique<BumpAction>(*engine_.GetPlayer(), -1, 0);
 		break;
 	case SDLK_6:
 	case SDLK_RIGHT:
-		action = std::make_unique<BumpAction>(1, 0);
+		action = std::make_unique<BumpAction>(*engine_.GetPlayer(), 1, 0);
 		break;
 	case SDLK_8:
 	case SDLK_UP:
-		action = std::make_unique<BumpAction>(0, -1);
+		action = std::make_unique<BumpAction>(*engine_.GetPlayer(), 0, -1);
 		break;
 	case SDLK_ESCAPE:
 		action = std::make_unique<EscapeAction>();

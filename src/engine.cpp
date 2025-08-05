@@ -22,7 +22,7 @@ void Engine::HandleEvent()
 	std::unique_ptr<Action> action = handler_.Dispatch();
 
 	if (action) {
-		action->Perform(*this, *player_);
+		action->Perform(*this);
 		HandleEnemyTurn();
 		UpdateFov();
 	}
