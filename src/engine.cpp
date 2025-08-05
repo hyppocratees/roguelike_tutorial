@@ -5,6 +5,7 @@
 #include "entity_manager.h"
 #include "procgen.h"
 #include "entity_factory.h"
+#include <libtcod/mersenne.hpp>
 
 #include <iostream>
 
@@ -52,9 +53,10 @@ void Engine::UpdateFov() const
 
 void Engine::PlaceEntities()
 {
+	TCODRandom random;
 	std::vector<RectangleRoom>& rooms = map_.GetRooms();
 	for (RectangleRoom& room : rooms) {
-		entities_.PlaceEntities(room, MAX_MONSTER_PER_ROOM);
+		entities_.PlaceEntities(room, MAX_MONSTER_PER_ROOM, random);
 	}
 	player_ = &entities_.Get(0);
 }

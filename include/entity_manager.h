@@ -4,6 +4,7 @@
 
 class Entity;
 class RectangleRoom;
+class TCODRandom;
 
 class EntityManager {
 public:
@@ -11,7 +12,7 @@ public:
 
     Entity& Spawn(const Entity& src);
     Entity& Spawn(const Entity& src, std::pair<int, int> pos);
-    void PlaceEntities(RectangleRoom& room, int max_monster_per_room);
+    void PlaceEntities(RectangleRoom& room, int max_monster_per_room, TCODRandom& random);
     Entity* GetBlockingEntity(int x, int y);
     Entity& Get(int index) { return entities_.at(index); };
 
