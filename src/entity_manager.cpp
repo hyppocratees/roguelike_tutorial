@@ -1,5 +1,5 @@
 #include "entity_manager.h"
-#include "entity.h"
+#include "actor.h"
 #include <vector>
 #include <libtcod/mersenne.hpp>
 #include "procgen.h"
@@ -7,14 +7,14 @@
 
 #include <iostream>
 
-Entity& EntityManager::Spawn(const Entity& src)
+Actor& EntityManager::Spawn(const Actor& src)
 {
 	return entities_.emplace_back(src);
 }
 
-Entity& EntityManager::Spawn(const Entity& src, std::pair<int, int> pos)
+Actor& EntityManager::Spawn(const Actor& src, std::pair<int, int> pos)
 {
-	Entity& entity = Spawn(src);
+	Actor& entity = Spawn(src);
 	if (pos.first != entity.GetX() && pos.second != entity.GetY()) {
 		entity.SetX(pos.first);
 		entity.SetY(pos.second);
@@ -38,7 +38,7 @@ void EntityManager::PlaceEntities(RectangleRoom& room, int max_monster_per_room,
 	}
 }
 
-Entity* EntityManager::GetBlockingEntity(int x, int y)
+Actor* EntityManager::GetBlockingEntity(int x, int y)
 {
 	for (auto& entity : entities_) {
 		if (entity.GetX() == x && entity.GetY() == y && entity.BlockMov()) return &entity;

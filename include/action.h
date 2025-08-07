@@ -43,3 +43,11 @@ public:
     BumpAction(Entity& entity, int dx, int dy);
     void virtual Perform(Engine& engine) const;
 };
+
+class WaitAction : public Action {
+public:
+    WaitAction(Entity& entity) : entity_(entity) {}
+    void virtual Perform(Engine& engine) const {};
+private:
+    Entity& entity_;
+};

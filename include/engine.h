@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "input_handler.h"
-#include "entity.h"
+#include "actor.h"
 #include "gamemap.h"
 #include "entity_manager.h"
 #include "procgen.h"
@@ -27,14 +27,14 @@ public:
 	void UpdateFov() const;
 	void PlaceEntities();
 	void HandleEnemyTurn();
-	Entity* GetPlayer() { return player_; };
+	Actor* GetPlayer() { return player_; };
 
 private:
 	tcod::Context& context_;
 	tcod::Console& console_;
 	EntityManager entities_;
 	EventHandler handler_;
-	Entity* player_;
+	Actor* player_;
 	GameMap& map_;
 	MapGenerator& mapgen_;
 	bool isrunning_;

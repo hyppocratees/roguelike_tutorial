@@ -4,7 +4,8 @@
 
 class BaseComponent {
 public:
-	BaseComponent(Entity& entity) : entity_(entity) {};
+	BaseComponent() : entity_(nullptr) {};
+	BaseComponent(Entity* entity) : entity_(entity) {};
 protected:
-	Entity& entity_;
+	Entity* entity_;
 };

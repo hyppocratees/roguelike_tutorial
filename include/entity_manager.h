@@ -2,7 +2,7 @@
 #include <vector>
 #include <utility>
 
-class Entity;
+class Actor;
 class RectangleRoom;
 class TCODRandom;
 
@@ -10,31 +10,31 @@ class EntityManager {
 public:
     EntityManager() : entities_({}) {}
 
-    Entity& Spawn(const Entity& src);
-    Entity& Spawn(const Entity& src, std::pair<int, int> pos);
+    Actor& Spawn(const Actor& src);
+    Actor& Spawn(const Actor& src, std::pair<int, int> pos);
     void PlaceEntities(RectangleRoom& room, int max_monster_per_room, TCODRandom& random);
-    Entity* GetBlockingEntity(int x, int y);
-    Entity& Get(int index) { return entities_.at(index); };
+    Actor* GetBlockingEntity(int x, int y);
+    Actor& Get(int index) { return entities_.at(index); };
 
-    std::vector<Entity>::iterator begin()
+    std::vector<Actor>::iterator begin()
     {
         return entities_.begin();
     }
 
-    std::vector<Entity>::iterator end()
+    std::vector<Actor>::iterator end()
     {
         return entities_.end();
     }
 
-    std::vector<Entity>::const_iterator begin() const
+    std::vector<Actor>::const_iterator begin() const
     {
         return entities_.begin();
     }
 
-    std::vector<Entity>::const_iterator end() const
+    std::vector<Actor>::const_iterator end() const
     {
         return entities_.end();
     }
 private:
-	std::vector<Entity> entities_;
+	std::vector<Actor> entities_;
 };
