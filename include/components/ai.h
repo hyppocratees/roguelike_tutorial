@@ -5,11 +5,11 @@
 #include <utility>
 
 class Engine;
-class Entity;
+class Actor;
 
 class BaseAI : public BaseComponent {
 public:
-	BaseAI(Entity* entity): BaseComponent(entity) {}
+	BaseAI(Actor* entity): BaseComponent(entity) {}
 	virtual void Perform(Engine& engine) {};
 	virtual std::vector<std::pair<int, int>> GetPathTo(int dest_x, int dest_y);
 	virtual int GetAiType() const { return 0; };
@@ -17,7 +17,7 @@ public:
 
 class HostileAI : public BaseAI {
 public:
-	HostileAI(Entity* entity) : BaseAI(entity) {};
+	HostileAI(Actor* entity) : BaseAI(entity) {};
 	virtual void Perform(Engine& engine); 
 	virtual int GetAiType() const { return 1; };
 };

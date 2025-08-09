@@ -1,27 +1,28 @@
 #include "action.h"
-#include "entity.h"
+#include "actor.h"
 #include "gamemap.h"
 #include "engine.h"
 #include "entity_manager.h"
 
 #include <iostream>
+#include <format>
 
 void EscapeAction::Perform(Engine& engine) const {
 	engine.Quit();
 }
 
-MovementAction::MovementAction(Entity& entity, int dx, int dy) : ActionWithDirection(entity, dx, dy){
+MovementAction::MovementAction(Actor& entity, int dx, int dy) : ActionWithDirection(entity, dx, dy){
 }
 
-ActionWithDirection::ActionWithDirection(Entity& entity, int dx, int dy) : dx_(dx), dy_(dy), entity_(entity)
+ActionWithDirection::ActionWithDirection(Actor& entity, int dx, int dy) : dx_(dx), dy_(dy), entity_(entity)
 {
 }
 
-MeleeAction::MeleeAction(Entity& entity, int dx, int dy) : ActionWithDirection(entity, dx, dy)
+MeleeAction::MeleeAction(Actor& entity, int dx, int dy) : ActionWithDirection(entity, dx, dy)
 {
 }
 
-BumpAction::BumpAction(Entity& entity, int dx, int dy) : ActionWithDirection(entity, dx, dy)
+BumpAction::BumpAction(Actor& entity, int dx, int dy) : ActionWithDirection(entity, dx, dy)
 {
 }
 
@@ -43,9 +44,17 @@ void MovementAction::Perform(Engine& engine) const{
 void MeleeAction::Perform(Engine& engine) const {
 	int dest_x = entity_.GetX() + dx_;
 	int dest_y = entity_.GetY() + dy_;
-	Entity* target = engine.GetEntities().GetBlockingEntity(dest_x, dest_y);
+	Actor* target = engine.GetEntities().GetBlockingEntity(dest_x, dest_y);
 	if (!target) return; // no entity
-	std::cout << "you kick " << target->GetName() << " much to it's annoyance" << std::endl;
+	int damage = entity_.GetPower() - target->GetDefense();
+	std::string attack_desc = std::format("{} attacks {}", entity_.GetName(), target->GetName());
+	if (damage > 0) {
+		target->TakeDamage(damage);
+		std::cout << std::format("{} for {} hit point", attack_desc, damage) << std::endl;
+	}
+	else {
+		std::cout << attack_desc << std::format("{} but does no damage", attack_desc) << std::endl;
+	}
 }
 
 

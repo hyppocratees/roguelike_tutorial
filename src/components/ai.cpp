@@ -16,10 +16,10 @@ std::vector<std::pair<int, int>> BaseAI::GetPathTo(int dest_x, int dest_y)
 	path.compute(entity_->GetX(), entity_->GetY(), dest_x, dest_y);
 
 	for (int i = 0; i < path.size(); ++i) {
-		int* x = 0;
-		int* y = 0;
-		path.get(i, x, y);
-		result_path.emplace_back(*x, *y);
+		int x = 0;
+		int y = 0;
+		path.get(i, &x, &y);
+		result_path.emplace_back(x, y);
 	}
 	return result_path;
 }

@@ -13,6 +13,9 @@ public:
 	virtual int GetY() const { return y_; };
 	virtual void SetX(int x) { x_ = x; };
 	virtual void SetY(int y) { y_ = y; };
+	virtual void SetChar(char c) { char_ = c; };
+	virtual void SetBlockMove(bool bm) { block_mov_ = bm; };
+	virtual void SetName(std::string name) { name_ = name; };
 	virtual char GetChar() const { return char_; };
 	virtual tcod::ColorRGB GetColor() const { return color_; };
 	virtual std::string GetName() const { return name_; };

@@ -32,9 +32,14 @@ public:
 			ai_ = std::make_unique<BaseAI>(this);
 			break;
 		}
+		fighter_.SetEntity(this);
 	};
 	bool IsAlive() const { return fighter_.GetHp() != 0; };
 	BaseAI* GetAI() { return ai_.get(); };
+	int GetPower() const { return fighter_.GetPower(); }
+	int GetDefense() const { return fighter_.GetDefense(); };
+	void SetAI(const std::unique_ptr<BaseAI>& ai) { if (ai == nullptr) { ai_ = nullptr; } else { ai_ = std::make_unique<BaseAI>(*ai); } };
+	void TakeDamage(int damage) { fighter_.Hp(fighter_.GetHp() - damage); };
 protected:
 	std::unique_ptr<BaseAI> ai_;
 	Fighter fighter_;

@@ -65,6 +65,7 @@ void Engine::PlaceEntities()
 void Engine::HandleEnemyTurn()
 {
 	for (auto& entity : entities_) {
+		if (entity.GetName() == "player" || !entity.IsAlive()) continue;
 		entity.GetAI()->Perform(*this);
 		//std::cout << "The " << entity.GetName() << " wonders when it will get to take a real turn." << std::endl;
 	}

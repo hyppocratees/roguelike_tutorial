@@ -1,11 +1,11 @@
 #pragma once
 
-#include "entity.h"
+class Actor;
 
 class BaseComponent {
 public:
 	BaseComponent() : entity_(nullptr) {};
-	BaseComponent(Entity* entity) : entity_(entity) {};
+	BaseComponent(Actor* entity) : entity_(entity) {};
 protected:
-	Entity* entity_;
+	Actor* entity_;
 };
