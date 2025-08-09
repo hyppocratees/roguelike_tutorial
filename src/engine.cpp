@@ -40,6 +40,8 @@ void Engine::Render()
 		}
 	}
 
+	tcod::print(console_, { 2, 47 }, std::format("HP : {}/{}", player_->GetHp(), player_->GetMaxHp()), { {255, 255, 255} }, { { 0, 0, 0 } });
+
 	context_.present(console_);
 
 	console_.clear();

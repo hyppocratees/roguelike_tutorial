@@ -8,6 +8,7 @@ public:
 	Fighter(int maxhp, int defense, int power) : max_hp_(maxhp), hp_(max_hp_), power_(power), defense_(defense) {};
 	Fighter(int hp, int max_hp, int defense, int power, Actor* entity) : hp_(hp), max_hp_(max_hp), defense_(defense), power_(power), BaseComponent(entity) {};
 	int GetHp() const { return hp_; };
+	int GetMaxHp() const { return max_hp_; };
 	int Hp() const { return hp_; };
 	void Hp(int value) {hp_ = std::max(0, std::min(value, max_hp_)); if (hp_ == 0) Die();};
 	void SetEntity(Actor* entity) { entity_ = entity; };

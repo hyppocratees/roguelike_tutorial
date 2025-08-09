@@ -38,6 +38,8 @@ public:
 	BaseAI* GetAI() { return ai_.get(); };
 	int GetPower() const { return fighter_.GetPower(); }
 	int GetDefense() const { return fighter_.GetDefense(); };
+	int GetHp() const { return fighter_.GetHp(); };
+	int GetMaxHp() const { return fighter_.GetMaxHp(); };
 	void SetAI(const std::unique_ptr<BaseAI>& ai) { if (ai == nullptr) { ai_ = nullptr; } else { ai_ = std::make_unique<BaseAI>(*ai); } };
 	void TakeDamage(int damage) { fighter_.Hp(fighter_.GetHp() - damage); };
 protected:
