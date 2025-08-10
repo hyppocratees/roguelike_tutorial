@@ -51,6 +51,10 @@ void MeleeAction::Perform(Engine& engine) const {
 	if (damage > 0) {
 		target->TakeDamage(damage);
 		std::cout << std::format("{} for {} hit point", attack_desc, damage) << std::endl;
+		if (!target->IsAlive() ){
+			DieAction action = DieAction(*target);
+			action.Perform(engine);
+		}
 	}
 	else {
 		std::cout << attack_desc << std::format("{} but does no damage", attack_desc) << std::endl;
@@ -65,4 +69,18 @@ void BumpAction::Perform(Engine& engine) const {
 		return MeleeAction(entity_, dx_, dy_).Perform(engine);
 	}
 	return MovementAction(entity_, dx_, dy_).Perform(engine);
+}
+
+void DieAction::Perform(Engine& engine) const {
+	std::string death_message;
+	if (entity_.GetName() == "player") {
+		death_message = "You died!";
+		engine.HandleDeath();
+	}
+	else {
+		death_message = std::format("{} is dead!", entity_.GetName());
+	}
+	std::cout << death_message << std::endl;
+	entity_.Die();
+
 }

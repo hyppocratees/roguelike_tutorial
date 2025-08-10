@@ -10,7 +10,7 @@ public:
 	int GetHp() const { return hp_; };
 	int GetMaxHp() const { return max_hp_; };
 	int Hp() const { return hp_; };
-	void Hp(int value) {hp_ = std::max(0, std::min(value, max_hp_)); if (hp_ == 0) Die();};
+	void Hp(int value) {hp_ = std::max(0, std::min(value, max_hp_));};
 	void SetEntity(Actor* entity) { entity_ = entity; };
 	int GetPower() const { return power_; };
 	int GetDefense() const { return defense_; };

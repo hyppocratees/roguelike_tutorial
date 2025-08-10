@@ -21,7 +21,7 @@ std::unique_ptr<Action> EventHandler::Dispatch() const
 	return game_event;
 }
 
-std::unique_ptr<Action> EventHandler::EvKeydown(const SDL_Event& event) const
+std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) const
 {
 	std::unique_ptr<Action> action = nullptr;
 
@@ -73,5 +73,18 @@ std::unique_ptr<Action> EventHandler::EvKeydown(const SDL_Event& event) const
 		break;
 	}
 
+	return action;
+}
+
+std::unique_ptr<Action> GameOverEventHandler::EvKeydown(const SDL_Event& event) const {
+	std::unique_ptr<Action> action = nullptr;
+
+	switch (event.key.key) {
+	case SDLK_ESCAPE:
+		action = std::make_unique<EscapeAction>();
+		break;
+	default:
+		break;
+	}
 	return action;
 }

@@ -6,10 +6,12 @@
 #include "procgen.h"
 #include "entity_factory.h"
 #include <libtcod/mersenne.hpp>
+#include <algorithm>
+#include "actor.h"
 
 #include <iostream>
 
-Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(EventHandler(*this)), context_(context), console_(console), map_(map), isrunning_(true), mapgen_(mapgen), player_(nullptr)
+Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainGameEventHandler>(*this)), context_(context), console_(console), map_(map), isrunning_(true), mapgen_(mapgen), player_(nullptr)
 {
 	mapgen_.Generate(map_);
 	entities_.Spawn(PLAYER, map_.GetRoom(0).Center());
@@ -19,7 +21,7 @@ Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, Map
 
 void Engine::HandleEvent()
 {
-	std::unique_ptr<Action> action = handler_.Dispatch();
+	std::unique_ptr<Action> action = handler_->Dispatch();
 
 	if (action) {
 		action->Perform(*this);
@@ -32,8 +34,9 @@ void Engine::HandleEvent()
 void Engine::Render()
 {
 	map_.Render(console_);
-
-	for (Entity& entity : entities_) {
+	std::vector<Actor> actors = entities_.Get();
+	std::sort(actors.begin(), actors.end(), [](const Actor a, const Actor b) { return a.GetRendOrd() < b.GetRendOrd(); });
+	for (Actor& entity : actors) {
 		if (map_.IsInFov(entity.GetX(), entity.GetY())){
 			console_.at(entity.GetX(), entity.GetY()).ch = entity.GetChar();
 			console_.at(entity.GetX(), entity.GetY()).fg = entity.GetColor();
@@ -71,4 +74,9 @@ void Engine::HandleEnemyTurn()
 		entity.GetAI()->Perform(*this);
 		//std::cout << "The " << entity.GetName() << " wonders when it will get to take a real turn." << std::endl;
 	}
+}
+
+void Engine::HandleDeath()
+{
+	handler_ = std::make_unique<GameOverEventHandler>(*this);
 }

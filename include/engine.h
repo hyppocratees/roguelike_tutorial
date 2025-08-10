@@ -2,6 +2,7 @@
 
 #include <libtcod/libtcod.hpp>
 #include <vector>
+#include <memory>
 
 #include "input_handler.h"
 #include "actor.h"
@@ -27,13 +28,14 @@ public:
 	void UpdateFov() const;
 	void PlaceEntities();
 	void HandleEnemyTurn();
+	void HandleDeath();
 	Actor* GetPlayer() { return player_; };
 
 private:
 	tcod::Context& context_;
 	tcod::Console& console_;
 	EntityManager entities_;
-	EventHandler handler_;
+	std::unique_ptr<EventHandler> handler_;
 	Actor* player_;
 	GameMap& map_;
 	MapGenerator& mapgen_;

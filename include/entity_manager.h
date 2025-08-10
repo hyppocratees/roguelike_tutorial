@@ -15,6 +15,7 @@ public:
     void PlaceEntities(RectangleRoom& room, int max_monster_per_room, TCODRandom& random);
     Actor* GetBlockingEntity(int x, int y);
     Actor& Get(int index) { return entities_.at(index); };
+    std::vector<Actor> Get() { return entities_; };
 
     std::vector<Actor>::iterator begin()
     {

@@ -51,3 +51,11 @@ public:
 private:
     Actor& entity_;
 };
+
+class DieAction : public Action {
+public:
+    DieAction(Actor& entity) : entity_(entity) {}
+    void virtual Perform(Engine& engine) const;
+private:
+    Actor& entity_;
+};
