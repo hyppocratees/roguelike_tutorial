@@ -5,6 +5,8 @@
 #include "entity_manager.h"
 #include "procgen.h"
 #include "entity_factory.h"
+#include "renderer.h"
+
 #include <libtcod/mersenne.hpp>
 #include <algorithm>
 #include "actor.h"
@@ -43,7 +45,7 @@ void Engine::Render()
 		}
 	}
 
-	tcod::print(console_, { 2, 47 }, std::format("HP : {}/{}", player_->GetHp(), player_->GetMaxHp()), { {255, 255, 255} }, { { 0, 0, 0 } });
+	Renderer::RenderBar(console_, player_->GetHp(), player_->GetMaxHp(), 20, player_);
 
 	context_.present(console_);
 
