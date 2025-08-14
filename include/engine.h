@@ -2,6 +2,7 @@
 
 #include <libtcod/libtcod.hpp>
 #include <vector>
+#include <utility>
 #include <memory>
 
 #include "input_handler.h"
@@ -22,6 +23,9 @@ public:
 
 	GameMap& GetMap() const { return map_; };
 	EntityManager& GetEntities() { return entities_; };
+	const EntityManager& GetEntities() const { return entities_; };
+	tcod::Context& GetContext() const { return context_; };
+	tcod::Console& GetConsole() const { return console_; };
 
 	bool IsRunning() const { return isrunning_; };
 	void Quit() { isrunning_ = false; };
@@ -31,8 +35,11 @@ public:
 	void HandleEnemyTurn();
 	void HandleDeath();
 	Actor* GetPlayer() { return player_; };
+	std::pair<int, int> GetMouseLocation() const { return mouseloccation_; };
+	void SetMouseLocation(int x, int y) { mouseloccation_ = { x, y }; };
+	void SetMouseLocation(std::pair<int, int> loc) { mouseloccation_ = loc; };
 
-	void AddMessage(std::string text, tcod::ColorRGB color) { messagelog_.AddMessage(text, color); };
+	void AddMessage(std::string text, tcod::ColorRGB color, bool stack = false) { messagelog_.AddMessage(text, color, stack); };
 
 private:
 	tcod::Context& context_;
@@ -43,5 +50,6 @@ private:
 	GameMap& map_;
 	MapGenerator& mapgen_;
 	MessageLog messagelog_;
+	std::pair<int, int> mouseloccation_;
 	bool isrunning_;
 };

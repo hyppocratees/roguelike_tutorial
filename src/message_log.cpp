@@ -15,7 +15,7 @@ std::string Message::FullText() const {
 void MessageLog::AddMessage(std::string text, tcod::ColorRGB color, bool stack)
 {
 	if (stack && !messages_.empty()) {
-		if (messages_.back().FullText() == text) {
+		if (messages_.back().GetText() == text) {
 			messages_.back().IncreaseCount();
 			return;
 		}

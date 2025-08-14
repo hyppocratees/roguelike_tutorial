@@ -12,6 +12,7 @@ public:
 	virtual std::unique_ptr<Action> Dispatch() const;
 protected:
 	virtual std::unique_ptr<Action> EvKeydown(const SDL_Event& event) const = 0;
+	virtual void EvMouseMotion(const SDL_Event& event) const;
 	Engine& engine_;
 };
 
@@ -20,6 +21,7 @@ public:
 	MainGameEventHandler(Engine& engine) : EventHandler(engine) {}
 private:
 	virtual std::unique_ptr<Action> EvKeydown(const SDL_Event& event) const;
+	
 };
 
 class GameOverEventHandler : public EventHandler {

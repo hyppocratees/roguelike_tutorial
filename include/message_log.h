@@ -11,6 +11,7 @@ public:
 	std::string FullText() const;
 	void IncreaseCount() { ++count_; };
 	tcod::ColorRGB GetColor() const { return color_; };
+	std::string GetText() const { return text_; };
 private:
 	std::string text_;
 	tcod::ColorRGB color_;

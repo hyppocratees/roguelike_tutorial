@@ -14,7 +14,7 @@
 
 #include <iostream>
 
-Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainGameEventHandler>(*this)), context_(context), console_(console), map_(map), isrunning_(true), mapgen_(mapgen), player_(nullptr), messagelog_(MessageLog())
+Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainGameEventHandler>(*this)), context_(context), console_(console), map_(map), isrunning_(true), mapgen_(mapgen), player_(nullptr), messagelog_(MessageLog()), mouseloccation_({0,0})
 {
 	mapgen_.Generate(map_);
 	entities_.Spawn(PLAYER, map_.GetRoom(0).Center());
@@ -49,6 +49,7 @@ void Engine::Render()
 	messagelog_.Render(console_, 32, 45, 40, 5);
 
 	Renderer::RenderBar(console_, player_->GetHp(), player_->GetMaxHp(), 20, player_);
+	Renderer::RenderNamesAtMouseLocation(*this, 21, 44);
 
 	context_.present(console_);
 

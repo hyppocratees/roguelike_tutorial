@@ -11,6 +11,7 @@ std::unique_ptr<Action> EventHandler::Dispatch() const
 	SDL_Event event{};
 
 	SDL_PollEvent(&event);
+	engine_.GetContext().convert_event_coordinates(event);
 	std::unique_ptr<Action> game_event = nullptr;
 	if (event.type == SDL_EVENT_KEY_DOWN)
 		game_event = EvKeydown(event);
@@ -74,6 +75,13 @@ std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) 
 	}
 
 	return action;
+}
+
+void EventHandler::EvMouseMotion(const SDL_Event& event) const
+{
+	if (engine_.GetMap().Inbound(event.motion.x, event.motion.y)){
+		engine_.SetMouseLocation(event.motion.x, event.motion.y);
+	}
 }
 
 std::unique_ptr<Action> GameOverEventHandler::EvKeydown(const SDL_Event& event) const {
