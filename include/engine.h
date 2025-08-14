@@ -9,6 +9,7 @@
 #include "gamemap.h"
 #include "entity_manager.h"
 #include "procgen.h"
+#include "message_log.h"
 
 
 class Engine {
@@ -31,6 +32,8 @@ public:
 	void HandleDeath();
 	Actor* GetPlayer() { return player_; };
 
+	void AddMessage(std::string text, tcod::ColorRGB color) { messagelog_.AddMessage(text, color); };
+
 private:
 	tcod::Context& context_;
 	tcod::Console& console_;
@@ -39,5 +42,6 @@ private:
 	Actor* player_;
 	GameMap& map_;
 	MapGenerator& mapgen_;
+	MessageLog messagelog_;
 	bool isrunning_;
 };

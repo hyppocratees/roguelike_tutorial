@@ -9,6 +9,7 @@
 #include "engine.h"
 #include "gamemap.h"
 #include "procgen.h"
+#include "color.h"
 
 int main(int argc, char* argv[]) {
     tcod::Console console = tcod::Console{SCREEN_WIDTH, SCREEN_HEIGTH};  // Main console.
@@ -34,6 +35,8 @@ int main(int argc, char* argv[]) {
     MapGenerator mapgen(MAP_WIDTH, MAP_HEIGTH, ROOM_MIN_SIZE, ROOM_MAX_SIZE, MAX_ROOMS);
 
     Engine engine(context, console, gamemap, mapgen);
+
+    engine.AddMessage("Hello and welcome, adventurer, to yet another dungeon", welcome_text);
 
     while (engine.IsRunning()) {  // Game loop.
         engine.HandleEvent();

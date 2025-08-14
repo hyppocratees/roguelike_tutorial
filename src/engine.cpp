@@ -6,6 +6,7 @@
 #include "procgen.h"
 #include "entity_factory.h"
 #include "renderer.h"
+#include "message_log.h"
 
 #include <libtcod/mersenne.hpp>
 #include <algorithm>
@@ -13,7 +14,7 @@
 
 #include <iostream>
 
-Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainGameEventHandler>(*this)), context_(context), console_(console), map_(map), isrunning_(true), mapgen_(mapgen), player_(nullptr)
+Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainGameEventHandler>(*this)), context_(context), console_(console), map_(map), isrunning_(true), mapgen_(mapgen), player_(nullptr), messagelog_(MessageLog())
 {
 	mapgen_.Generate(map_);
 	entities_.Spawn(PLAYER, map_.GetRoom(0).Center());
@@ -44,6 +45,8 @@ void Engine::Render()
 			console_.at(entity.GetX(), entity.GetY()).fg = entity.GetColor();
 		}
 	}
+
+	messagelog_.Render(console_, 32, 45, 40, 5);
 
 	Renderer::RenderBar(console_, player_->GetHp(), player_->GetMaxHp(), 20, player_);
 
