@@ -31,6 +31,10 @@ std::string Renderer::GetNamesAtLocation(int x, int y, const Engine& engine)
 	std::string names = "";
 	for (const auto& entity : manager) {
 		if (entity.GetX() == x && entity.GetY() == y){
+			if (names == "") {
+				names = entity.GetName();
+				continue;
+			}
 			names = std::format("{}, {}", names, entity.GetName());
 		}
 	}

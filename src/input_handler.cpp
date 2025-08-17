@@ -18,6 +18,9 @@ std::unique_ptr<Action> EventHandler::Dispatch() const
 	if (event.type == SDL_EVENT_QUIT) {
 		game_event = std::make_unique<EscapeAction>();
 	}
+	if (event.type == SDL_EVENT_MOUSE_MOTION) {
+		EvMouseMotion(event);
+	}
 
 	return game_event;
 }
