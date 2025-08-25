@@ -8,6 +8,7 @@
 #include <iostream>
 #include <format>
 #include <libtcod/color.hpp>
+#include <memory>
 
 void EscapeAction::Perform(Engine& engine) const {
 	engine.Quit();
@@ -91,4 +92,8 @@ void DieAction::Perform(Engine& engine) const {
 	engine.AddMessage(death_message, death_color);
 	entity_.Die();
 
+}
+
+void ReturnToMainGame::Perform(Engine& engine) const {
+	engine.SetEventHandler(std::make_unique<MainGameEventHandler>(engine));
 }

@@ -2,6 +2,7 @@
 #include "gamemap.h"
 #include "actor.h"
 
+
 class Engine;
 
 class Action {
@@ -58,4 +59,9 @@ public:
     void virtual Perform(Engine& engine) const;
 private:
     Actor& entity_;
+};
+
+class ReturnToMainGame : public Action {
+public:
+    void virtual Perform(Engine& engine) const;
 };

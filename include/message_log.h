@@ -22,7 +22,8 @@ class MessageLog {
 public:
 	MessageLog() {};
 	void AddMessage(std::string text, tcod::ColorRGB color = white, bool stack = false);
-	void Render(tcod::Console& console, int x, int y, int width, int height);
+	void Render(tcod::Console& console, int x, int y, int width, int height, std::vector<Message> message);
+	std::vector<Message> GetMessage() { return messages_; };
 private:
 	std::vector<Message> messages_{};
 };

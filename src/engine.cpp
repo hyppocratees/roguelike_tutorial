@@ -46,11 +46,11 @@ void Engine::Render()
 		}
 	}
 
-	messagelog_.Render(console_, 32, 45, 40, 5);
+	messagelog_.Render(console_, 32, 45, 40, 5, messagelog_.GetMessage());
 
 	Renderer::RenderBar(console_, player_->GetHp(), player_->GetMaxHp(), 20, player_);
 	Renderer::RenderNamesAtMouseLocation(*this, 21, 44);
-
+	handler_->OnRender(console_);
 	context_.present(console_);
 
 	console_.clear();
@@ -85,4 +85,9 @@ void Engine::HandleEnemyTurn()
 void Engine::HandleDeath()
 {
 	handler_ = std::make_unique<GameOverEventHandler>(*this);
+}
+
+void Engine::SetEventHandler(const std::unique_ptr<EventHandler>& new_handler)
+{
+	handler_ = new_handler->clone();
 }

@@ -40,7 +40,9 @@ public:
 	void SetMouseLocation(std::pair<int, int> loc) { mouseloccation_ = loc; };
 
 	void AddMessage(std::string text, tcod::ColorRGB color, bool stack = false) { messagelog_.AddMessage(text, color, stack); };
+	MessageLog& GetMessage() { return messagelog_; };
 
+	void SetEventHandler(const std::unique_ptr<EventHandler>& new_handler);
 private:
 	tcod::Context& context_;
 	tcod::Console& console_;

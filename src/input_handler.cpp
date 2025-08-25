@@ -1,7 +1,10 @@
-#include "input_handler.h"
+﻿#include "input_handler.h"
 #include "engine.h"
+#include "message_log.h"
 
 #include <memory>
+#include <algorithm>
+#include <libtcod/libtcod.hpp>
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
@@ -23,6 +26,11 @@ std::unique_ptr<Action> EventHandler::Dispatch() const
 	}
 
 	return game_event;
+}
+
+std::unique_ptr<EventHandler> MainGameEventHandler::clone() const
+{
+	return std::make_unique<MainGameEventHandler>(*this);
 }
 
 std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) const
@@ -73,6 +81,9 @@ std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) 
 	case SDLK_ESCAPE:
 		action = std::make_unique<EscapeAction>();
 		break;
+	case SDLK_V:
+		engine_.SetEventHandler(std::make_unique<HistoryViewerHandler>(engine_));
+		break;
 	default:
 		break;
 	}
@@ -98,4 +109,64 @@ std::unique_ptr<Action> GameOverEventHandler::EvKeydown(const SDL_Event& event) 
 		break;
 	}
 	return action;
+}
+
+HistoryViewerHandler::HistoryViewerHandler(Engine& engine) : EventHandler(engine), log_length_(engine.GetMessage().GetMessage().size()), cursor_(log_length_ - 1) {};
+
+void HistoryViewerHandler::OnRender(tcod::Console& cons) {
+	tcod::Console log_console{ cons.get_width() - 6, cons.get_height() - 6 };
+	tcod::draw_frame(log_console, { 0, 0, log_console.get_width(), log_console.get_height() }, { 0, 1, 2, 3, 4, 5, 6, 7, 8 }, { {255, 255, 255} }, { {0, 0, 0} });
+	tcod::print_rect(log_console, { 0, 0, log_console.get_width(), 1 }, "┤Message history├", { {255, 255, 255} }, { {0, 0, 0} }, TCOD_CENTER);
+	std::vector<Message> message = engine_.GetMessage().GetMessage();
+	std::vector<Message> to_render = std::vector<Message>(message.begin() + cursor_, message.end());
+	engine_.GetMessage().Render(log_console, 1, 1, log_console.get_width() - 2, log_console.get_height() - 2, to_render);
+	tcod::blit(cons, log_console, { 3, 3 });
+}
+
+std::unique_ptr<Action> HistoryViewerHandler::EvKeydown(const SDL_Event& event) const {
+	int adjust = 0;
+	std::unique_ptr<Action> action = nullptr;
+
+	switch (event.key.key) {
+	case SDLK_UP:
+		adjust = -1;
+		break;
+	case SDLK_DOWN:
+		adjust = 1;
+		break;
+	case SDLK_PAGEUP:
+		adjust = -10;
+		break;
+	case SDLK_PAGEDOWN:
+		adjust = 10;
+		break;
+	case SDLK_HOME:
+		cursor_ = 0;
+		break;
+	case SDLK_END:
+		cursor_ = log_length_ - 1;
+		break;
+	default:
+		action = std::make_unique<ReturnToMainGame>();
+	}
+
+	if (adjust < 0 && cursor_ == 0) {
+		cursor_ = log_length_ - 1;
+	}
+	else if (adjust > 0 && cursor_ == log_length_ - 1) {
+		cursor_ = 0;
+	}
+	else if (adjust != 0) {
+		cursor_ = std::max(0, std::min(cursor_ + adjust, log_length_ - 1));
+	}
+
+	return action;
+}
+
+std::unique_ptr<EventHandler> HistoryViewerHandler::clone() const {
+	return std::make_unique<HistoryViewerHandler>(*this);
+}
+
+std::unique_ptr<EventHandler> GameOverEventHandler::clone() const {
+	return std::make_unique<GameOverEventHandler>(*this);
 }

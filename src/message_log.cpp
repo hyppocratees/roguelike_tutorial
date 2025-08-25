@@ -23,10 +23,10 @@ void MessageLog::AddMessage(std::string text, tcod::ColorRGB color, bool stack)
 	messages_.emplace_back(text, color);
 }
 
-void MessageLog::Render(tcod::Console& console, int x, int y, int width, int height)
+void MessageLog::Render(tcod::Console& console, int x, int y, int width, int height, std::vector<Message> message)
 {
 	int y_offset = height - 1;
-	for (std::vector<Message>::reverse_iterator r_iter = messages_.rbegin(); r_iter != messages_.rend(); ++r_iter) {
+	for (std::vector<Message>::reverse_iterator r_iter = message.rbegin(); r_iter != message.rend(); ++r_iter) {
 		int count = (int)((float)r_iter->FullText().size() / (float)width);
 		for (int i = 0; i <= count; ++i) {
 			std::string subtext = r_iter->FullText().substr((count - i) * width, width);
