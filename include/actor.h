@@ -4,11 +4,16 @@
 #include "components/fighter.h"
 #include <memory>
 
+#include "inventory.h"
+
 class Actor : public Entity {
 public:
-	Actor() : Entity(), ai_(nullptr), fighter_(Fighter()) {};
-	Actor(int x, int y, char c, tcod::ColorRGB color, std::string name, bool block_mov, int ai_type, Fighter fighter, int rend_ord) : Entity(x, y, c, color, name, block_mov, rend_ord), ai_(nullptr), fighter_(fighter) {
+	Actor() : Entity(), ai_(nullptr), fighter_(Fighter()), inv_(Inventory(0, this)) {
+		inv_.SetOwner(this);
+	};
+	Actor(int x, int y, char c, tcod::ColorRGB color, std::string name, bool block_mov, int ai_type, Fighter fighter, int rend_ord,const Inventory& inv) : Entity(x, y, c, color, name, block_mov, rend_ord), ai_(nullptr), fighter_(fighter), inv_(inv) {
 		fighter_.SetEntity(this);
+		inv_.SetOwner(this);
 		switch (ai_type) {
 		case 1:
 			ai_ = std::make_unique<HostileAI>(this);
@@ -22,7 +27,7 @@ public:
 			break;
 		}
 	};
-	Actor(const Actor& actor) : Entity(actor.x_, actor.y_, actor.char_, actor.color_, actor.name_, actor.block_mov_, actor.rend_ord_), ai_(nullptr), fighter_(actor.fighter_) {
+	Actor(const Actor& actor) : Entity(actor.x_, actor.y_, actor.char_, actor.color_, actor.name_, actor.block_mov_, actor.rend_ord_), ai_(nullptr), fighter_(actor.fighter_), inv_(actor.inv_){
 		int ai_type = actor.ai_->GetAiType();
 		switch (ai_type) {
 		case 1:
@@ -50,6 +55,8 @@ public:
 		map_ = other.map_; //Actor does not own map
 		rend_ord_ = other.rend_ord_;
 		fighter_ = other.fighter_;
+		inv_ = other.inv_;
+		inv_.SetOwner(this);
 		int ai_type = other.ai_->GetAiType();
 		switch (ai_type) {
 		case 1:
@@ -79,4 +86,5 @@ public:
 protected:
 	std::unique_ptr<BaseAI> ai_;
 	Fighter fighter_;
+	Inventory inv_;
 };

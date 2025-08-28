@@ -9,6 +9,7 @@
 #include "actor.h"
 #include "gamemap.h"
 #include "entity_manager.h"
+#include "item_manager.h"
 #include "procgen.h"
 #include "message_log.h"
 
@@ -24,6 +25,8 @@ public:
 	GameMap& GetMap() const { return map_; };
 	EntityManager& GetEntities() { return entities_; };
 	const EntityManager& GetEntities() const { return entities_; };
+	ItemManager& GetItem() { return items_; };
+	ItemManager& GetItem() const { return items_; };
 	tcod::Context& GetContext() const { return context_; };
 	tcod::Console& GetConsole() const { return console_; };
 
@@ -47,6 +50,7 @@ private:
 	tcod::Context& context_;
 	tcod::Console& console_;
 	EntityManager entities_;
+	ItemManager items_;
 	std::unique_ptr<EventHandler> handler_;
 	Actor* player_;
 	GameMap& map_;

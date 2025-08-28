@@ -68,8 +68,10 @@ void Engine::PlaceEntities()
 	std::vector<RectangleRoom>& rooms = map_.GetRooms();
 	for (RectangleRoom& room : rooms) {
 		entities_.PlaceEntities(room, MAX_MONSTER_PER_ROOM, random);
+		items_.PlaceEntities(room, MAX_ITEM_PER_ROOM, random);
 	}
 	for (Entity& entity : entities_) entity.SetMap(&map_);
+	for (Item& item : items_) item.SetMap(&map_);
 	player_ = &entities_.Get(0);
 }
 
