@@ -1,11 +1,12 @@
 #pragma once
 
-class Actor;
+class Entity;
 
 class BaseComponent {
 public:
 	BaseComponent() : entity_(nullptr) {};
-	BaseComponent(Actor* entity) : entity_(entity) {};
+	BaseComponent(Entity* entity) : entity_(entity) {};
+	virtual void SetEntity(Entity* entity) { entity_ = entity; };
 protected:
-	Actor* entity_;
+	Entity* entity_;
 };

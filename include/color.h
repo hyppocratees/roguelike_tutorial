@@ -12,3 +12,7 @@ constexpr tcod::ColorRGB welcome_text{ 0x20, 0xA0, 0xFF };
 constexpr tcod::ColorRGB bar_text = white;
 constexpr tcod::ColorRGB bar_filled{ 0x0, 0x60, 0x0 };
 constexpr tcod::ColorRGB bar_empty{ 0x40, 0x10, 0x10 };
+constexpr tcod::ColorRGB invalid{ 0xFF, 0xFF, 0x00 };
+constexpr tcod::ColorRGB impossible{ 0x80, 0x80, 0x80 };
+constexpr tcod::ColorRGB error{ 0xFF, 0x40, 0x40 };
+constexpr tcod::ColorRGB health_recovered{ 0x0, 0xFF, 0x0 };

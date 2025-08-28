@@ -97,3 +97,7 @@ void DieAction::Perform(Engine& engine) const {
 void ReturnToMainGame::Perform(Engine& engine) const {
 	engine.SetEventHandler(std::make_unique<MainGameEventHandler>(engine));
 }
+
+void ItemAction::Perform(Engine& engine) const {
+	item_.GetConsumable()->Activate(engine, this);
+}

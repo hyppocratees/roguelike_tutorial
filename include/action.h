@@ -1,7 +1,9 @@
 #pragma once
 #include "gamemap.h"
 #include "actor.h"
+#include "item.h"
 
+#include <utility>
 
 class Engine;
 
@@ -64,4 +66,17 @@ private:
 class ReturnToMainGame : public Action {
 public:
     void virtual Perform(Engine& engine) const;
+};
+
+class ItemAction : public Action {
+public:
+    ItemAction(Actor& entity, Item& item) : actor_(entity), item_(item), target_xy_({0,0}) {};
+    ItemAction(Actor& entity, Item& item, std::pair<int, int> target_xy) : actor_(entity), item_(item), target_xy_(target_xy) {};
+    void virtual Perform(Engine& engine) const;
+    Actor& GetActor() const { return actor_; };
+
+private:
+    Actor& actor_;
+    Item& item_;
+    std::pair<int, int> target_xy_;
 };

@@ -74,7 +74,8 @@ public:
 	int GetMaxHp() const { return fighter_.GetMaxHp(); };
 	void SetAI(const std::unique_ptr<BaseAI>& ai) { if (ai == nullptr) { ai_ = nullptr; } else { ai_ = std::make_unique<BaseAI>(*ai); } };
 	void TakeDamage(int damage) { fighter_.Hp(fighter_.GetHp() - damage); };
-	void Die() { fighter_.Die(); };
+	void Die() { fighter_.Die(*this); };
+	Fighter& GetFighter() { return fighter_; };
 protected:
 	std::unique_ptr<BaseAI> ai_;
 	Fighter fighter_;

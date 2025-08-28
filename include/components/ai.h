@@ -7,12 +7,14 @@
 class Engine;
 class Actor;
 
-class BaseAI : public BaseComponent {
+class BaseAI {
 public:
-	BaseAI(Actor* entity): BaseComponent(entity) {}
+	BaseAI(Actor* entity): entity_(entity) {}
 	virtual void Perform(Engine& engine) {};
 	virtual std::vector<std::pair<int, int>> GetPathTo(int dest_x, int dest_y);
 	virtual int GetAiType() const { return 0; };
+protected:
+	Actor* entity_;
 };
 
 class HostileAI : public BaseAI {
