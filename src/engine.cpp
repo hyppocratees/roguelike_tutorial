@@ -45,6 +45,12 @@ void Engine::Render()
 			console_.at(entity.GetX(), entity.GetY()).fg = entity.GetColor();
 		}
 	}
+	for (Item& item : items_) {
+		if (map_.IsInFov(item.GetX(), item.GetY())) {
+			console_.at(item.GetX(), item.GetY()).ch = item.GetChar();
+			console_.at(item.GetX(), item.GetY()).fg = item.GetColor();
+		}
+	}
 
 	messagelog_.Render(console_, 32, 45, 40, 5, messagelog_.GetMessage());
 
