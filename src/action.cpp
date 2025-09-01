@@ -4,6 +4,8 @@
 #include "engine.h"
 #include "entity_manager.h"
 #include "color.h"
+#include "inventory.h"
+#include "item.h"
 
 #include <iostream>
 #include <format>
@@ -99,5 +101,26 @@ void ReturnToMainGame::Perform(Engine& engine) const {
 }
 
 void ItemAction::Perform(Engine& engine) const {
-	item_.GetConsumable()->Activate(engine, this);
+	if (item_.GetConsumable()) item_.GetConsumable()->Activate(engine, this);
+}
+
+void PickupAction::Perform(Engine& engine) const {
+	Inventory& inv = actor_.GetInventory();
+	ItemManager& itemman = engine.GetItem();
+	for (Item& item : itemman) {
+		if (item.GetPos() == actor_.GetPos()) {
+			if (inv.Size() >= inv.Capacity()) {
+				engine.AddMessage("Your Inventory is full", impossible, true);
+				return;
+			}
+			inv.Add(item);
+			engine.AddMessage(std::format("You picked up the {}", item.GetName()), white, true);
+			itemman.Remove(item);
+		}
+	}
+	engine.AddMessage("There is nothing here to pick up", error, true);
+}
+
+void DropAction::Perform(Engine& engine) const {
+	actor_.GetInventory().Drop(item_);
 }

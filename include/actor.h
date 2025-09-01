@@ -10,6 +10,7 @@ class Actor : public Entity {
 public:
 	Actor() : Entity(), ai_(nullptr), fighter_(Fighter()), inv_(Inventory(0, this)) {
 		inv_.SetOwner(this);
+		fighter_.SetEntity(this);
 	};
 	Actor(int x, int y, char c, tcod::ColorRGB color, std::string name, bool block_mov, int ai_type, Fighter fighter, int rend_ord,const Inventory& inv) : Entity(x, y, c, color, name, block_mov, rend_ord), ai_(nullptr), fighter_(fighter), inv_(inv) {
 		fighter_.SetEntity(this);
@@ -83,6 +84,7 @@ public:
 	void TakeDamage(int damage) { fighter_.Hp(fighter_.GetHp() - damage); };
 	void Die() { fighter_.Die(*this); };
 	Fighter& GetFighter() { return fighter_; };
+	[[nodiscard]] Inventory& GetInventory() { return inv_; };
 protected:
 	std::unique_ptr<BaseAI> ai_;
 	Fighter fighter_;

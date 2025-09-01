@@ -26,7 +26,7 @@ public:
 	EntityManager& GetEntities() { return entities_; };
 	const EntityManager& GetEntities() const { return entities_; };
 	ItemManager& GetItem() { return items_; };
-	ItemManager& GetItem() const { return items_; };
+	const ItemManager& GetItem() const { return items_; };
 	tcod::Context& GetContext() const { return context_; };
 	tcod::Console& GetConsole() const { return console_; };
 

@@ -16,7 +16,7 @@ public:
     void PlaceEntities(RectangleRoom& room, int max_item_per_room, TCODRandom& random);
     Item& Get(int index) { return items_.at(index); };
     std::vector<Item> Get() { return items_; };
-
+    void Remove(Item& item) { items_.erase(std::remove(items_.begin(), items_.end(), item)); };
 
     std::vector<Item>::iterator begin()
     {

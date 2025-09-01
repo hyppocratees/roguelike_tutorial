@@ -35,6 +35,10 @@ public:
 	}
 
 	Consumable* GetConsumable() { return consumable_.get(); };
+	friend bool operator==(const Item& lhs, const Item& rhs)
+	{
+		return &lhs == &rhs;
+	};
 
 private:
 	std::unique_ptr<Consumable> consumable_;

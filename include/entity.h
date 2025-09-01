@@ -1,6 +1,7 @@
 #pragma once
 #include <libtcod/color.hpp>
 #include <string>
+#include <utility>
 
 class GameMap;
 
@@ -11,6 +12,7 @@ public:
 	virtual void Move(int dx, int dy) { x_ += dx; y_ += dy; };
 	virtual int GetX() const { return x_; };
 	virtual int GetY() const { return y_; };
+	virtual std::pair<int, int> GetPos() const { return std::make_pair(x_, y_); };
 	virtual void SetX(int x) { x_ = x; };
 	virtual void SetY(int y) { y_ = y; };
 	virtual void SetChar(char c) { char_ = c; };

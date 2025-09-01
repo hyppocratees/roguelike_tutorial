@@ -51,7 +51,7 @@ class WaitAction : public Action {
 public:
     WaitAction(Actor& entity) : entity_(entity) {}
     void virtual Perform(Engine& engine) const {};
-private:
+protected:
     Actor& entity_;
 };
 
@@ -59,7 +59,7 @@ class DieAction : public Action {
 public:
     DieAction(Actor& entity) : entity_(entity) {}
     void virtual Perform(Engine& engine) const;
-private:
+protected:
     Actor& entity_;
 };
 
@@ -75,8 +75,22 @@ public:
     void virtual Perform(Engine& engine) const;
     Actor& GetActor() const { return actor_; };
 
-private:
+protected:
     Actor& actor_;
     Item& item_;
     std::pair<int, int> target_xy_;
+};
+
+class PickupAction : public Action {
+public:
+    PickupAction(Actor& entity) : actor_(entity) {};
+    void virtual Perform(Engine& engine) const;
+protected:
+    Actor& actor_;
+};
+
+class DropAction : public ItemAction {
+public:
+    DropAction(Actor& entity, Item& item) : ItemAction(entity, item) {};
+    void virtual Perform(Engine& engine) const;
 };

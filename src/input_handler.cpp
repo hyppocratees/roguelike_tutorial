@@ -5,6 +5,7 @@
 #include <memory>
 #include <algorithm>
 #include <libtcod/libtcod.hpp>
+#include <string>
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
@@ -83,6 +84,9 @@ std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) 
 		break;
 	case SDLK_V:
 		engine_.SetEventHandler(std::make_unique<HistoryViewerHandler>(engine_));
+		break;
+	case SDLK_P:
+		action = std::make_unique<PickupAction>(*engine_.GetPlayer());
 		break;
 	default:
 		break;
@@ -169,4 +173,104 @@ std::unique_ptr<EventHandler> HistoryViewerHandler::clone() const {
 
 std::unique_ptr<EventHandler> GameOverEventHandler::clone() const {
 	return std::make_unique<GameOverEventHandler>(*this);
+}
+
+AskUserEventHandler::AskUserEventHandler(Engine& engine) : EventHandler(engine)
+{
+}
+
+std::unique_ptr<EventHandler> AskUserEventHandler::clone() const {
+	return std::make_unique<AskUserEventHandler>(*this);
+}
+
+std::unique_ptr<Action> AskUserEventHandler::EvKeydown(const SDL_Event& event) const {
+	std::unique_ptr<Action> action = nullptr;
+
+	action = std::make_unique<ReturnToMainGame>();
+	
+	return action;
+}
+
+InventoryEventHandler::InventoryEventHandler(Engine& engine) : AskUserEventHandler(engine)
+{
+}
+
+InventoryEventHandler::InventoryEventHandler(Engine& engine, std::string title) : AskUserEventHandler(engine), title_(title)
+{
+}
+
+std::unique_ptr<EventHandler> InventoryEventHandler::clone() const {
+	return std::make_unique<InventoryEventHandler>(*this);
+}
+
+void InventoryEventHandler::OnRender(tcod::Console& cons) {
+	Inventory& inv = engine_.GetPlayer()->GetInventory();
+	int number_of_item = inv.Size();
+	int height = number_of_item + 2;
+	if (height <= 3) height = 3;
+	int x = 0;
+	if (engine_.GetPlayer()->GetX() <= 30) x = 40;
+	else x = 0;
+	int y = 0;
+	int width = title_.size() + 4;
+	tcod::Console inv_cons{width, height};
+	tcod::draw_frame(inv_cons, { x, y, width, height }, { 0, 1, 2, 3, 4, 5, 6, 7, 8 }, { {255, 255, 255} }, { {0, 0, 0} });
+	tcod::print_rect(inv_cons, { x, y + 2, width, height }, title_, { {255, 255, 255} }, { {0, 0, 0} }, TCOD_CENTER);
+	if (number_of_item > 0) {
+		for (int i = 0; i < number_of_item; ++i) {
+			char item_letter = (char)((int)'a' + i);
+			tcod::print(inv_cons, { x + i + 1,y + i + 1 }, std::format("{}) {}", item_letter, inv[i].GetName()), { {255, 255, 255} }, { {0, 0, 0} }, TCOD_LEFT, TCOD_BKGND_SET);
+		}
+	}
+	else tcod::print(inv_cons, { x + 1, y + 1 }, "(Empty)", {{255, 255, 255}}, {{0, 0, 0}}, TCOD_LEFT, TCOD_BKGND_SET);
+}
+
+std::unique_ptr<Action> InventoryEventHandler::EvKeydown(const SDL_Event& event) const {
+	
+	
+	SDL_Keycode sym = event.key.key;
+
+	if (sym == SDLK_ESCAPE) return std::make_unique<ReturnToMainGame>();
+	if (SDLK_A <= sym && sym <= SDLK_Z) {
+		try {
+			Item& item = engine_.GetPlayer()->GetInventory()[sym - SDLK_A];
+			Dispatch();
+			return OnItemSelected(&item);
+		}
+		catch (...){
+			engine_.AddMessage("Invalid Entry", invalid, true);
+		}
+	}
+
+	return nullptr;
+}
+
+std::unique_ptr<Action> InventoryEventHandler::OnItemSelected(Item* item) const {
+	return std::make_unique<ItemAction>(*engine_.GetPlayer(), *item );
+}
+
+InventoryActivateHandler::InventoryActivateHandler(Engine& engine) : InventoryEventHandler(engine, "Select an item to use") {
+}
+
+std::unique_ptr<EventHandler> InventoryActivateHandler::clone() const {
+	return std::make_unique<InventoryActivateHandler>(*this);
+}
+
+std::unique_ptr<Action> InventoryActivateHandler::OnItemSelected(Item* item) const {
+	if (item->GetConsumable()) {
+		return item->GetConsumable()->GetAction(*engine_.GetPlayer());
+	}
+	return nullptr;
+}
+
+InventoryDropHandler::InventoryDropHandler(Engine& engine) : InventoryEventHandler(engine, "Select an item to drop")
+{
+}
+
+std::unique_ptr<EventHandler> InventoryDropHandler::clone() const {
+	return std::make_unique<InventoryDropHandler>(*this);
+}
+
+std::unique_ptr<Action> InventoryDropHandler::OnItemSelected(Item* item) const {
+	return std::make_unique<DropAction>(*engine_.GetPlayer(), *item);
 }
