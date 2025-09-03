@@ -3,12 +3,18 @@
 #include "message_log.h"
 
 #include <memory>
+#include <map>
 #include <algorithm>
 #include <libtcod/libtcod.hpp>
 #include <string>
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
+
+std::map<SDL_Keycode, std::pair<int, int>> MoveKey{ {SDLK_1, {-1, 1}}, {SDLK_2, {0, 1} }, {SDLK_3, {1, 1}}, {SDLK_4, {-1, 0}}, {SDLK_5, {0, 0}}, {SDLK_6, {1, 0} }, {SDLK_7, {-1, -1} }, {SDLK_8, {0, -1}}, {SDLK_9, {1, -1}},
+	{SDLK_UP, {0, -1}}, {SDLK_DOWN, {0, 1}}, {SDLK_RIGHT, {1, 0}}, {SDLK_LEFT, {-1, 0}},
+	{SDLK_KP_1, {-1, 1}}, {SDLK_KP_2, {0, 1} }, {SDLK_KP_3, {1, 1}}, {SDLK_KP_4, {-1, 0}}, {SDLK_KP_5, {0, 0}}, {SDLK_KP_6, {1, 0} }, {SDLK_KP_7, {-1, -1} }, {SDLK_KP_8, {0, -1}}, {SDLK_KP_9, {1, -1}} };
+
 
 std::unique_ptr<Action> EventHandler::Dispatch() const
 {
@@ -29,7 +35,7 @@ std::unique_ptr<Action> EventHandler::Dispatch() const
 	return game_event;
 }
 
-std::unique_ptr<EventHandler> MainGameEventHandler::clone() const
+std::unique_ptr<EventHandler> MainGameEventHandler::Clone() const
 {
 	return std::make_unique<MainGameEventHandler>(*this);
 }
@@ -94,6 +100,9 @@ std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) 
 	case SDLK_D:
 		engine_.SetEventHandler(std::make_unique<InventoryDropHandler>(engine_));
 		break;
+	case SDLK_L:
+		engine_.SetEventHandler(std::make_unique<LookHandler>(engine_));
+		break;
 	default:
 		break;
 	}
@@ -101,11 +110,12 @@ std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) 
 	return action;
 }
 
-void EventHandler::EvMouseMotion(const SDL_Event& event) const
+std::unique_ptr<Action> EventHandler::EvMouseMotion(const SDL_Event& event) const
 {
 	if (engine_.GetMap().Inbound(event.motion.x, event.motion.y)){
 		engine_.SetMouseLocation(event.motion.x, event.motion.y);
 	}
+	return nullptr;
 }
 
 std::unique_ptr<Action> GameOverEventHandler::EvKeydown(const SDL_Event& event) const {
@@ -173,11 +183,11 @@ std::unique_ptr<Action> HistoryViewerHandler::EvKeydown(const SDL_Event& event) 
 	return action;
 }
 
-std::unique_ptr<EventHandler> HistoryViewerHandler::clone() const {
+std::unique_ptr<EventHandler> HistoryViewerHandler::Clone() const {
 	return std::make_unique<HistoryViewerHandler>(*this);
 }
 
-std::unique_ptr<EventHandler> GameOverEventHandler::clone() const {
+std::unique_ptr<EventHandler> GameOverEventHandler::Clone() const {
 	return std::make_unique<GameOverEventHandler>(*this);
 }
 
@@ -185,7 +195,7 @@ AskUserEventHandler::AskUserEventHandler(Engine& engine) : EventHandler(engine)
 {
 }
 
-std::unique_ptr<EventHandler> AskUserEventHandler::clone() const {
+std::unique_ptr<EventHandler> AskUserEventHandler::Clone() const {
 	return std::make_unique<AskUserEventHandler>(*this);
 }
 
@@ -205,7 +215,7 @@ InventoryEventHandler::InventoryEventHandler(Engine& engine, std::string title) 
 {
 }
 
-std::unique_ptr<EventHandler> InventoryEventHandler::clone() const {
+std::unique_ptr<EventHandler> InventoryEventHandler::Clone() const {
 	return std::make_unique<InventoryEventHandler>(*this);
 }
 
@@ -259,7 +269,7 @@ std::unique_ptr<Action> InventoryEventHandler::OnItemSelected(Item* item) const 
 InventoryActivateHandler::InventoryActivateHandler(Engine& engine) : InventoryEventHandler(engine, "Select an item to use") {
 }
 
-std::unique_ptr<EventHandler> InventoryActivateHandler::clone() const {
+std::unique_ptr<EventHandler> InventoryActivateHandler::Clone() const {
 	return std::make_unique<InventoryActivateHandler>(*this);
 }
 
@@ -274,10 +284,65 @@ InventoryDropHandler::InventoryDropHandler(Engine& engine) : InventoryEventHandl
 {
 }
 
-std::unique_ptr<EventHandler> InventoryDropHandler::clone() const {
+std::unique_ptr<EventHandler> InventoryDropHandler::Clone() const {
 	return std::make_unique<InventoryDropHandler>(*this);
 }
 
 std::unique_ptr<Action> InventoryDropHandler::OnItemSelected(Item* item) const {
 	return std::make_unique<DropAction>(*engine_.GetPlayer(), *item);
+}
+
+SelectIndexHandler::SelectIndexHandler(Engine& engine) : AskUserEventHandler(engine), mouse_location_(engine.GetMouseLocation())
+{
+	engine_.SetMouseLocation(engine_.GetPlayer()->GetPos());
+}
+
+void SelectIndexHandler::OnRender(tcod::Console& console) {
+	console.at(mouse_location_.first, mouse_location_.second).bg = white;
+	console.at(mouse_location_.first, mouse_location_.second).fg = black;
+}
+
+std::unique_ptr<Action> SelectIndexHandler::EvKeydown(const SDL_Event& event) const {
+	std::unique_ptr<Action> action = nullptr;
+	int modifier = 1;
+	auto lambda = [&](auto it) {return it.first == event.key.key; };
+	auto found = std::find_if(MoveKey.begin(), MoveKey.end(), lambda);
+	if (found != MoveKey.end()) {
+		if (event.key.mod & SDL_KMOD_SHIFT)
+			modifier *= 5;
+		else if (event.key.mod & SDL_KMOD_CTRL)
+			modifier *= 10;
+		else if (event.key.mod & SDL_KMOD_ALT)
+			modifier *= 20;
+		int x = engine_.GetMouseLocation().first;
+		int y = engine_.GetMouseLocation().second;
+		std::pair<int, int> dxdy = MoveKey[event.key.key];
+		x += dxdy.first * modifier;
+		y += dxdy.second * modifier;
+		x = std::max(0, std::min(x, engine_.GetMap().GetWidth() - 1));
+		y = std::max(0, std::min(y, engine_.GetMap().GetHeight() - 1));
+		engine_.SetMouseLocation({ x, y });
+		return nullptr;
+	}
+	else if (event.key.key == SDLK_RETURN || event.key.key == SDLK_KP_ENTER || event.key.key == SDLK_CLEAR || event.key.key == SDLK_ESCAPE) {
+		return OnIndexSelected(engine_.GetMouseLocation());
+	}
+}
+
+std::unique_ptr<Action> SelectIndexHandler::EvMouseMotion(const SDL_Event& event) const {
+	if (engine_.GetMap().Inbound(event.motion.x, event.motion.y)) {
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			return OnIndexSelected(event.motion.x, event.motion.y);
+		}
+	}
+	return nullptr;
+}
+
+std::unique_ptr<Action> LookHandler::OnIndexSelected(int x, int y) const
+{
+	return std::make_unique<ReturnToMainGame>();
+}
+
+std::unique_ptr<EventHandler> LookHandler::Clone() const {
+	return std::make_unique<LookHandler>(*this);
 }

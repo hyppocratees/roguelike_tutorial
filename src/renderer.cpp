@@ -10,6 +10,7 @@
 #include "gamemap.h"
 #include "engine.h"
 #include "entity_manager.h"
+#include "item_manager.h"
 
 
 void Renderer::RenderBar(tcod::Console& console, int c_value, int max_value, int total_width,const Actor* const player) {
@@ -28,6 +29,8 @@ std::string Renderer::GetNamesAtLocation(int x, int y, const Engine& engine)
 		return "";
 	}
 	const EntityManager& manager = engine.GetEntities();
+
+	const ItemManager& item_manager = engine.GetItem();
 	std::string names = "";
 	for (const auto& entity : manager) {
 		if (entity.GetX() == x && entity.GetY() == y){
@@ -38,6 +41,16 @@ std::string Renderer::GetNamesAtLocation(int x, int y, const Engine& engine)
 			names = std::format("{}, {}", names, entity.GetName());
 		}
 	}
+	for (const auto& entity : item_manager) {
+		if (entity.GetX() == x && entity.GetY() == y) {
+			if (names == "") {
+				names = entity.GetName();
+				continue;
+			}
+			names = std::format("{}, {}", names, entity.GetName());
+		}
+	}
+
 	return names;
 }
 

@@ -98,5 +98,5 @@ void Engine::HandleDeath()
 
 void Engine::SetEventHandler(const std::unique_ptr<EventHandler>& new_handler)
 {
-	handler_ = new_handler->clone();
+	handler_ = new_handler->Clone();
 }

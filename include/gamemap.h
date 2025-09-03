@@ -22,6 +22,8 @@ public:
 	RectangleRoom& GetRoom(int index);
 	std::vector<RectangleRoom>& GetRooms() { return rooms_; };
 	TCODMap* GetMap() { return &map_; };
+	int GetWidth() const { return width_; };
+	int GetHeight() const { return height_; };
 private:
 	int width_;
 	int height_;

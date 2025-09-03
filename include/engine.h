@@ -39,6 +39,7 @@ public:
 	void HandleDeath();
 	Actor* GetPlayer() { return player_; };
 	std::pair<int, int> GetMouseLocation() const { return mouseloccation_; };
+	std::pair<int, int>& GetMouseLocation() { return mouseloccation_; };
 	void SetMouseLocation(int x, int y) { mouseloccation_ = { x, y }; };
 	void SetMouseLocation(std::pair<int, int> loc) { mouseloccation_ = loc; };
 
