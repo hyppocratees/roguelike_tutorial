@@ -26,6 +26,7 @@ public:
 	virtual GameMap* GetMap() const { return map_; };
 	virtual int GetRendOrd() const { return rend_ord_; };
 	virtual void SetRendOrd(int rend_ord) { rend_ord_ = rend_ord; };
+	virtual float Distance(int x, int y) const;
 protected:
 	int x_;
 	int y_;

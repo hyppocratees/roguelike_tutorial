@@ -102,8 +102,9 @@ void ReturnToMainGame::Perform(Engine& engine) const {
 
 void ItemAction::Perform(Engine& engine) const {
 	if (item_.GetConsumable()) {
-		item_.GetConsumable()->Activate(engine, this);
-		actor_.GetInventory().Remove(item_);
+		if( item_.GetConsumable()->Activate(engine, this)){
+			actor_.GetInventory().Remove(item_);
+		}
 	}
 }
 

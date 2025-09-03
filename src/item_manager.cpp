@@ -25,7 +25,9 @@ void ItemManager::PlaceEntities(RectangleRoom& room, int max_item_per_room, TCOD
 		int x = random.getInt(room.GetX1() + 1, room.GetX2() - 1);
 		int y = random.getInt(room.GetY1() + 1, room.GetY2() - 1);
 
-		Spawn(HEALTH_POTION, { x, y });
-
+		float item_chance = random.getFloat(0, 1);
+		if (item_chance <= 0.7) Spawn(HEALTH_POTION, { x, y });
+		else Spawn(LIGHTNING_SCROLL, { x, y });
+		
 	}
 }

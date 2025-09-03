@@ -66,13 +66,14 @@ public:
 	};
 
 	bool IsAlive() const { return fighter_.GetHp() != 0; };
+	bool IsDead() const { return fighter_.GetHp() == 0; };
 	BaseAI* GetAI() { return ai_.get(); };
 	int GetPower() const { return fighter_.GetPower(); }
 	int GetDefense() const { return fighter_.GetDefense(); };
 	int GetHp() const { return fighter_.GetHp(); };
 	int GetMaxHp() const { return fighter_.GetMaxHp(); };
 	void SetAI(const std::unique_ptr<BaseAI>& ai) { if (ai == nullptr) { ai_ = nullptr; } else { ai_ = std::make_unique<BaseAI>(*ai); } };
-	void TakeDamage(int damage) { fighter_.Hp(fighter_.GetHp() - damage); };
+	void TakeDamage(int damage);
 	void Die() { fighter_.Die(*this); };
 	Fighter& GetFighter() { return fighter_; };
 	[[nodiscard]] Inventory& GetInventory() { return inv_; };
