@@ -101,7 +101,10 @@ void ReturnToMainGame::Perform(Engine& engine) const {
 }
 
 void ItemAction::Perform(Engine& engine) const {
-	if (item_.GetConsumable()) item_.GetConsumable()->Activate(engine, this);
+	if (item_.GetConsumable()) {
+		item_.GetConsumable()->Activate(engine, this);
+		actor_.GetInventory().Remove(item_);
+	}
 }
 
 void PickupAction::Perform(Engine& engine) const {
@@ -116,11 +119,13 @@ void PickupAction::Perform(Engine& engine) const {
 			inv.Add(item);
 			engine.AddMessage(std::format("You picked up the {}", item.GetName()), white, true);
 			itemman.Remove(item);
+			return;
 		}
 	}
 	engine.AddMessage("There is nothing here to pick up", error, true);
 }
 
 void DropAction::Perform(Engine& engine) const {
+	engine.GetItem().Spawn(item_, actor_.GetPos());
 	actor_.GetInventory().Drop(item_);
 }

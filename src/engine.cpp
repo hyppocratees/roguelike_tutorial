@@ -39,18 +39,19 @@ void Engine::Render()
 	map_.Render(console_);
 	std::vector<Actor> actors = entities_.Get();
 	std::sort(actors.begin(), actors.end(), [](const Actor a, const Actor b) { return a.GetRendOrd() < b.GetRendOrd(); });
-	for (Actor& entity : actors) {
-		if (map_.IsInFov(entity.GetX(), entity.GetY())){
-			console_.at(entity.GetX(), entity.GetY()).ch = entity.GetChar();
-			console_.at(entity.GetX(), entity.GetY()).fg = entity.GetColor();
-		}
-	}
 	for (Item& item : items_) {
 		if (map_.IsInFov(item.GetX(), item.GetY())) {
 			console_.at(item.GetX(), item.GetY()).ch = item.GetChar();
 			console_.at(item.GetX(), item.GetY()).fg = item.GetColor();
 		}
 	}
+	for (Actor& entity : actors) {
+		if (map_.IsInFov(entity.GetX(), entity.GetY())){
+			console_.at(entity.GetX(), entity.GetY()).ch = entity.GetChar();
+			console_.at(entity.GetX(), entity.GetY()).fg = entity.GetColor();
+		}
+	}
+
 
 	messagelog_.Render(console_, 32, 45, 40, 5, messagelog_.GetMessage());
 

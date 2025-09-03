@@ -6,6 +6,25 @@
 
 #include "inventory.h"
 
+namespace {
+	std::unique_ptr<BaseAI> GetAIType(int ai_type, Actor& actor) {
+		std::unique_ptr<BaseAI> ai;
+		switch (ai_type) {
+		case 1:
+			ai = std::make_unique<HostileAI>(&actor);
+			break;
+		case -1:
+			ai = std::make_unique<DeadAI>(&actor);
+			break;
+		case 0:
+		default:
+			ai = std::make_unique<BaseAI>(&actor);
+			break;
+		}
+		return ai;
+	}
+}
+
 class Actor : public Entity {
 public:
 	Actor() : Entity(), ai_(nullptr), fighter_(Fighter()), inv_(Inventory(0, this)) {
@@ -15,32 +34,12 @@ public:
 	Actor(int x, int y, char c, tcod::ColorRGB color, std::string name, bool block_mov, int ai_type, Fighter fighter, int rend_ord,const Inventory& inv) : Entity(x, y, c, color, name, block_mov, rend_ord), ai_(nullptr), fighter_(fighter), inv_(inv) {
 		fighter_.SetEntity(this);
 		inv_.SetOwner(this);
-		switch (ai_type) {
-		case 1:
-			ai_ = std::make_unique<HostileAI>(this);
-			break;
-		case -1:
-			ai_ = std::make_unique<DeadAI>(this);
-			break;
-		case 0:
-		default:
-			ai_ = std::make_unique<BaseAI>(this);
-			break;
-		}
+		ai_ = GetAIType(ai_type, *this);
 	};
 	Actor(const Actor& actor) : Entity(actor.x_, actor.y_, actor.char_, actor.color_, actor.name_, actor.block_mov_, actor.rend_ord_), ai_(nullptr), fighter_(actor.fighter_), inv_(actor.inv_){
-		int ai_type = actor.ai_->GetAiType();
-		switch (ai_type) {
-		case 1:
-			ai_ = std::make_unique<HostileAI>(this);
-			break;
-		case -1:
-			ai_ = std::make_unique<DeadAI>(this);
-			break;
-		case 0:
-		default:
-			ai_ = std::make_unique<BaseAI>(this);
-			break;
+		if (actor.ai_) {
+			int ai_type = actor.ai_->GetAiType();
+			ai_ = GetAIType(ai_type, *this);
 		}
 		fighter_.SetEntity(this);
 	};
@@ -58,19 +57,11 @@ public:
 		fighter_ = other.fighter_;
 		inv_ = other.inv_;
 		inv_.SetOwner(this);
-		int ai_type = other.ai_->GetAiType();
-		switch (ai_type) {
-		case 1:
-			ai_ = std::make_unique<HostileAI>(this);
-			break;
-		case -1:
-			ai_ = std::make_unique<DeadAI>(this);
-			break;
-		case 0:
-		default:
-			ai_ = std::make_unique<BaseAI>(this);
-			break;
+		if (other.ai_) {
+			int ai_type = other.ai_->GetAiType();
+			ai_ = GetAIType(ai_type, *this);
 		}
+		else ai_ = nullptr;
 		return *this;
 	};
 

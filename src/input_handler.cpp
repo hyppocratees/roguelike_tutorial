@@ -88,6 +88,12 @@ std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) 
 	case SDLK_P:
 		action = std::make_unique<PickupAction>(*engine_.GetPlayer());
 		break;
+	case SDLK_I:
+		engine_.SetEventHandler(std::make_unique<InventoryActivateHandler>(engine_));
+		break;
+	case SDLK_D:
+		engine_.SetEventHandler(std::make_unique<InventoryDropHandler>(engine_));
+		break;
 	default:
 		break;
 	}
@@ -214,15 +220,16 @@ void InventoryEventHandler::OnRender(tcod::Console& cons) {
 	int y = 0;
 	int width = title_.size() + 4;
 	tcod::Console inv_cons{width, height};
-	tcod::draw_frame(inv_cons, { x, y, width, height }, { 0, 1, 2, 3, 4, 5, 6, 7, 8 }, { {255, 255, 255} }, { {0, 0, 0} });
-	tcod::print_rect(inv_cons, { x, y + 2, width, height }, title_, { {255, 255, 255} }, { {0, 0, 0} }, TCOD_CENTER);
+	tcod::draw_frame(inv_cons, { 0, 0, width, height }, { 0, 1, 2, 3, 4, 5, 6, 7, 8 }, { {255, 255, 255} }, { {0, 0, 0} });
+	tcod::print_rect(inv_cons, { 2, 0, width, height }, title_, { {255, 255, 255} }, { {0, 0, 0} }, TCOD_CENTER);
 	if (number_of_item > 0) {
 		for (int i = 0; i < number_of_item; ++i) {
 			char item_letter = (char)((int)'a' + i);
-			tcod::print(inv_cons, { x + i + 1,y + i + 1 }, std::format("{}) {}", item_letter, inv[i].GetName()), { {255, 255, 255} }, { {0, 0, 0} }, TCOD_LEFT, TCOD_BKGND_SET);
+			tcod::print(inv_cons, { 1, i + 1 }, std::format("{}) {}", item_letter, inv[i].GetName()), { {255, 255, 255} }, { {0, 0, 0} }, TCOD_LEFT, TCOD_BKGND_SET);
 		}
 	}
-	else tcod::print(inv_cons, { x + 1, y + 1 }, "(Empty)", {{255, 255, 255}}, {{0, 0, 0}}, TCOD_LEFT, TCOD_BKGND_SET);
+	else tcod::print(inv_cons, { 1, 1 }, "(Empty)", {{255, 255, 255}}, {{0, 0, 0}}, TCOD_LEFT, TCOD_BKGND_SET);
+	tcod::blit(cons, inv_cons, { x, y });
 }
 
 std::unique_ptr<Action> InventoryEventHandler::EvKeydown(const SDL_Event& event) const {

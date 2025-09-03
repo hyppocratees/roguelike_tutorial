@@ -40,6 +40,8 @@ public:
 		return &lhs == &rhs;
 	};
 
+	bool IsConsumable() const { return consumable_ != nullptr; };
+
 private:
 	std::unique_ptr<Consumable> consumable_;
 };
