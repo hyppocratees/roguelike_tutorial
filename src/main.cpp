@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 
+#include "setup_game.h"
 #include "glob_var.h"
 #include "entity.h"
 #include "engine.h"
@@ -29,15 +30,7 @@ int main(int argc, char* argv[]) {
     auto tileset = tcod::load_tilesheet("../dejavu10x10_gs_tc.png", {32, 8}, tcod::CHARMAP_TCOD);
     params.tileset = tileset.get();
 
-    tcod::Context context = tcod::Context(params);
-
-    GameMap gamemap(MAP_WIDTH, MAP_HEIGTH);
-
-    MapGenerator mapgen(MAP_WIDTH, MAP_HEIGTH, ROOM_MIN_SIZE, ROOM_MAX_SIZE, MAX_ROOMS);
-
-    Engine engine(context, console, gamemap, mapgen);
-
-    engine.AddMessage("Hello and welcome, adventurer, to yet another dungeon", welcome_text);
+    Engine engine = NewGame(console, params);
 
     while (engine.IsRunning()) {  // Game loop.
         engine.HandleEvent();

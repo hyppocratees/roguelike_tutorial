@@ -19,3 +19,5 @@ constexpr tcod::ColorRGB error{ 0xFF, 0x40, 0x40 };
 constexpr tcod::ColorRGB health_recovered{ 0x0, 0xFF, 0x0 };
 constexpr tcod::ColorRGB need_target{ 0x3F, 0xFF, 0xFF };
 constexpr tcod::ColorRGB status_effect_applied{ 0x3F, 0xFF, 0x3F };
+constexpr tcod::ColorRGB menu_title{ 255, 255, 63 };
+constexpr tcod::ColorRGB menu_text = white;

@@ -18,6 +18,9 @@ class Engine {
 public:
 
 	Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen);
+	Engine(const Engine& engine);
+	Engine& operator=(const Engine& engine);
+	Engine& operator=(const Engine&& engine);
 
 	void HandleEvent();
 	void Render();

@@ -11,10 +11,11 @@
 #include <libtcod/mersenne.hpp>
 #include <algorithm>
 #include "actor.h"
+#include "setup_game.h"
 
 #include <iostream>
 
-Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainGameEventHandler>(*this)), context_(context), console_(console), map_(map), isrunning_(true), mapgen_(mapgen), player_(nullptr), messagelog_(MessageLog()), mouseloccation_({0,0})
+Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainMenu>(*this)), context_(context), console_(console), map_(map), isrunning_(true), mapgen_(mapgen), player_(nullptr), messagelog_(MessageLog()), mouseloccation_({0,0})
 {
 	mapgen_.Generate(map_);
 	entities_.Spawn(PLAYER, map_.GetRoom(0).Center());
