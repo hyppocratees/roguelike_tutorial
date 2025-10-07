@@ -275,7 +275,7 @@ std::unique_ptr<EventHandler> InventoryActivateHandler::Clone() const {
 
 std::unique_ptr<Action> InventoryActivateHandler::OnItemSelected(Item* item) const {
 	if (item->GetConsumable()) {
-		return item->GetConsumable()->GetAction(*engine_.GetPlayer());
+		return item->GetConsumable()->GetAction(engine_, *engine_.GetPlayer(), *item);
 	}
 	return nullptr;
 }
@@ -345,4 +345,30 @@ std::unique_ptr<Action> LookHandler::OnIndexSelected(int x, int y) const
 
 std::unique_ptr<EventHandler> LookHandler::Clone() const {
 	return std::make_unique<LookHandler>(*this);
+}
+
+std::unique_ptr<Action> SingleRangedAttackHandler::OnIndexSelected(int x, int y) const
+{
+	callback_(x, y);
+	return nullptr;
+}
+
+std::unique_ptr<EventHandler> SingleRangedAttackHandler::Clone() const {
+	return std::make_unique<SingleRangedAttackHandler>(*this);
+}
+
+std::unique_ptr<EventHandler> AreaRangedAttackHandler::Clone() const {
+	return std::make_unique<AreaRangedAttackHandler>(*this);
+}
+
+void AreaRangedAttackHandler::OnRender(tcod::Console& console) {
+	int x = engine_.GetMouseLocation().first;
+	int y = engine_.GetMouseLocation().second;
+	tcod::draw_frame(console, { x - radius_ - 1, y - radius_ - 1, radius_ * radius_, radius_ * radius_ }, { ' ', '-', ' ', '|', ' ', '|', ' ', '-', ' ' }, red, std::nullopt, TCOD_BKGND_NONE, false);
+
+}
+
+std::unique_ptr<Action> AreaRangedAttackHandler::OnIndexSelected(int x, int y) const {
+	callback_(x, y);
+	return nullptr;
 }

@@ -7,6 +7,8 @@
 
 #include <vector>
 #include <utility>
+#include <memory>
+#include <string>
 #include <libtcod/path.hpp>
 
 std::vector<std::pair<int, int>> BaseAI::GetPathTo(int dest_x, int dest_y)
@@ -40,4 +42,35 @@ void HostileAI::Perform(Engine& engine) {
 		return MovementAction(*entity_, dest_x - entity_->GetX(), dest_y - entity_->GetY()).Perform(engine);
 	}
 	return WaitAction(*entity_).Perform(engine);
+}
+
+std::unique_ptr<BaseAI> BaseAI::Clone() const {
+	return std::make_unique<BaseAI>(entity_);
+}
+
+std::unique_ptr<BaseAI> HostileAI::Clone() const {
+	return std::make_unique<HostileAI>(entity_);
+}
+
+std::unique_ptr<BaseAI> DeadAI::Clone() const {
+	return std::make_unique<DeadAI>(entity_);
+}
+
+std::unique_ptr<BaseAI> ConfusedAI::Clone() const {
+	return std::make_unique<ConfusedAI>(entity_, prevAI_.get(), turn_remaining_);
+}
+
+void ConfusedAI::Perform(Engine& engine) {
+	if (turn_remaining_ <= 0) {
+		std::string name = entity_->GetName();
+		engine.AddMessage(std::format("{} is no longer confused", name), white, false);
+		entity_->SetAI(prevAI_);
+		return;
+	}
+	auto* rand = TCODRandom::getInstance();
+	int rx = rand->getInt(-1, 1);
+	int ry = rand->getInt(-1, 1);
+	turn_remaining_ -= 1;
+	auto action = BumpAction(*entity_, rx, ry);
+	action.Perform(engine);
 }

@@ -1,5 +1,6 @@
 #include <libtcod.hpp>
 #include <libtcod/color.hpp>
+#include <SDL3/SDL.h>
 
 #include <memory>
 #include <vector>

@@ -3,14 +3,22 @@
 #include "actor.h"
 #include "engine.h"
 #include "color.h"
+#include "item.h"
+#include "components/ai.h"
 
 #include <memory>
 #include <format>
+#include <utility>
 
 
 std::unique_ptr<Action> Consumable::GetAction(Actor& consumer) const
 {
 	return std::make_unique<ItemAction>(consumer, (Item&)*entity_);
+}
+
+std::unique_ptr<Action> Consumable::GetAction(Engine& engine, Actor& consumer, Item& item) const
+{
+	return GetAction(consumer);
 }
 
 bool HealingConsumable::Activate(Engine& engine, const ItemAction const* action) const
@@ -51,4 +59,61 @@ bool LightningDamageConsumable::Activate(Engine& engine, const ItemAction const*
 		engine.AddMessage(std::format("No enemy is close enough to strike."), white, false);
 		return false;
 	}
+}
+
+std::unique_ptr<Action> ConfusionConsumable::GetAction(Engine& engine, Actor& consumer, Item& item) const {
+	engine.AddMessage("Select a target location", need_target, false);
+	engine.SetEventHandler(std::make_unique<SingleRangedAttackHandler>(engine, [&](int x, int y) {ItemAction(consumer, item, { x, y }).Perform(engine); }));
+	return std::make_unique<ItemAction>(consumer, (Item&)*entity_);
+}
+
+bool ConfusionConsumable::Activate(Engine& engine, const ItemAction const* action) const {
+	if (!action) return false;
+	auto[x, y] = action->GetPos();
+	if (!engine.GetMap().IsInFov(x, y)) {
+		engine.AddMessage("You cannot target an area that you cannot see.", white, false);
+		return false;
+	}
+	Actor* target = engine.GetEntities().GetBlockingEntity(x, y);
+	if (!target) {
+		engine.AddMessage("You must target an enemy.", white, false);
+		return false;
+	}
+	if (target == engine.GetPlayer()) {
+		engine.AddMessage("You cannot target yourself.", white, false);
+		return false;
+	}
+	engine.AddMessage(std::format("The eyes of the {} look vacant, as it starts to stumble around!", target->GetName()), status_effect_applied, false);
+
+	target->SetAI(std::make_unique<ConfusedAI>(target, target->GetAI(), 10));
+	engine.SetEventHandler(std::make_unique<MainGameEventHandler>(engine));
+	return true;
+}
+
+bool FireballConsumable::Activate(Engine& engine, const ItemAction const* action) const {
+	if (!action) return false;
+	auto[x, y] = action->GetPos();
+	if (!engine.GetMap().IsInFov(x, y)) {
+		engine.AddMessage("You cannot target an area that you cannot see.", white, false);
+		return false;
+	}
+	bool target_hit = false;
+	for (Actor& actor : engine.GetEntities()) {
+		if (actor.Distance(x, y) <= radius_) {
+			engine.AddMessage(std::format("The {}, is engulfed in a fiery explosion, taking {} damage!", actor.GetName(), damage_), white, true);
+			actor.TakeDamage(damage_);
+			target_hit = true;
+		}
+	}
+	if (!target_hit) {
+		engine.AddMessage("There are no targets in the radius.", white, true);
+	}
+	engine.SetEventHandler(std::make_unique<MainGameEventHandler>(engine));
+	return true;
+}
+
+std::unique_ptr<Action> FireballConsumable::GetAction(Engine& engine, Actor& consumer, Item& item) const {
+	engine.AddMessage("Select a target location", need_target, false);
+	engine.SetEventHandler(std::make_unique<AreaRangedAttackHandler>(engine, radius_, [&](int x, int y) {ItemAction(consumer, item, { x, y }).Perform(engine); }));
+	return std::make_unique<ItemAction>(consumer, (Item&)*entity_);
 }

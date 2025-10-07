@@ -5,6 +5,7 @@
 
 class Entity;
 class Actor;
+class Item;
 class Action;
 class ItemAction;
 class Engine;
@@ -14,6 +15,7 @@ public:
 	Consumable() : BaseComponent() {};
 	Consumable(Entity* pentity) : BaseComponent(pentity) {};
 	virtual std::unique_ptr<Action> GetAction(Actor& consumer) const;
+	virtual std::unique_ptr<Action> GetAction(Engine& engine, Actor& consumer, Item& item) const;
 	virtual bool Activate(Engine& engine, const ItemAction const* action) const = 0;
 	virtual std::unique_ptr<Consumable> Clone() = 0;
 };
@@ -36,4 +38,25 @@ public:
 private:
 	int damage_;
 	int max_range_;
+};
+
+class ConfusionConsumable : public Consumable {
+public:
+	ConfusionConsumable(int n_turn) : Consumable(), number_turn_(n_turn) {};
+	virtual std::unique_ptr<Consumable> Clone() { return std::make_unique<ConfusionConsumable>(number_turn_); };
+	virtual bool Activate(Engine& engine, const ItemAction const* action) const;
+	virtual std::unique_ptr<Action> GetAction(Engine& engine, Actor& consumer, Item& item) const;
+private:
+	int number_turn_;
+};
+
+class FireballConsumable : public Consumable {
+public:
+	FireballConsumable(int damage, int radius) : damage_(damage), radius_(radius) {};
+	virtual std::unique_ptr<Consumable> Clone() { return std::make_unique<FireballConsumable>(damage_, radius_); };
+	virtual bool Activate(Engine& engine, const ItemAction const* action) const;
+	virtual std::unique_ptr<Action> GetAction(Engine& engine, Actor& consumer, Item& item) const;
+private:
+	int damage_;
+	int radius_;
 };

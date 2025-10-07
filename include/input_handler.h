@@ -1,8 +1,8 @@
 #pragma once
 #include <memory>
 #include <utility>
+#include <functional>
 #include <libtcod/libtcod.hpp>
-#include <SDL3/SDL.h>
 
 #include "action.h"
 
@@ -108,4 +108,26 @@ public:
 	virtual std::unique_ptr<EventHandler> Clone() const;
 protected:
 	virtual std::unique_ptr<Action> OnIndexSelected(int x, int y) const;
+};
+
+class SingleRangedAttackHandler : public SelectIndexHandler {
+public:
+	SingleRangedAttackHandler(Engine& engine, std::function<void(int, int)> callback) : SelectIndexHandler(engine), callback_(callback) {};
+	virtual std::unique_ptr<EventHandler> Clone() const;
+protected:
+	virtual std::unique_ptr<Action> OnIndexSelected(int x, int y) const;
+private:
+	std::function<void(int, int)> callback_;
+};
+
+class AreaRangedAttackHandler : public SelectIndexHandler {
+public:
+	AreaRangedAttackHandler(Engine& engine, int radius, std::function<void(int, int)> callback) : SelectIndexHandler(engine), radius_(radius), callback_(callback) {};
+	virtual std::unique_ptr<EventHandler> Clone() const;
+	virtual void OnRender(tcod::Console& console);
+protected:
+		virtual std::unique_ptr<Action> OnIndexSelected(int x, int y) const;
+private:
+	std::function<void(int, int)> callback_;
+	int radius_;
 };

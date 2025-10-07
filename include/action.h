@@ -74,7 +74,7 @@ public:
     ItemAction(Actor& entity, Item& item, std::pair<int, int> target_xy) : actor_(entity), item_(item), target_xy_(target_xy) {};
     void virtual Perform(Engine& engine) const;
     Actor& GetActor() const { return actor_; };
-
+    virtual std::pair<int, int> GetPos() const { return target_xy_; };
 protected:
     Actor& actor_;
     Item& item_;

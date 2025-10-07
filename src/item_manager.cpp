@@ -27,6 +27,8 @@ void ItemManager::PlaceEntities(RectangleRoom& room, int max_item_per_room, TCOD
 
 		float item_chance = random.getFloat(0, 1);
 		if (item_chance <= 0.7) Spawn(HEALTH_POTION, { x, y });
+		else if (item_chance <= 0.8) Spawn(FIREBALL_SCROLL, { x, y });
+		else if (item_chance <= 0.9) Spawn(CONFUSION_SCROLL, { x, y });
 		else Spawn(LIGHTNING_SCROLL, { x, y });
 		
 	}
