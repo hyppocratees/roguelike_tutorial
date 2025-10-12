@@ -9,6 +9,9 @@ class RectangleRoom;
 class GameMap {
 public:
 	GameMap(int width, int height);
+	GameMap(const GameMap& gm);
+	GameMap& operator=(const GameMap& gm);
+
 	bool Inbound(int x, int y) const;
 	void Render(tcod::Console& cons);
 	void Update();

@@ -70,7 +70,7 @@ std::unique_ptr<Action> ConfusionConsumable::GetAction(Engine& engine, Actor& co
 bool ConfusionConsumable::Activate(Engine& engine, const ItemAction const* action) const {
 	if (!action) return false;
 	auto[x, y] = action->GetPos();
-	if (!engine.GetMap().IsInFov(x, y)) {
+	if (!engine.GetMap()->IsInFov(x, y)) {
 		engine.AddMessage("You cannot target an area that you cannot see.", white, false);
 		return false;
 	}
@@ -93,7 +93,7 @@ bool ConfusionConsumable::Activate(Engine& engine, const ItemAction const* actio
 bool FireballConsumable::Activate(Engine& engine, const ItemAction const* action) const {
 	if (!action) return false;
 	auto[x, y] = action->GetPos();
-	if (!engine.GetMap().IsInFov(x, y)) {
+	if (!engine.GetMap()->IsInFov(x, y)) {
 		engine.AddMessage("You cannot target an area that you cannot see.", white, false);
 		return false;
 	}

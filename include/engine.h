@@ -19,18 +19,16 @@ public:
 
 	Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen);
 	Engine(const Engine& engine);
-	Engine& operator=(const Engine& engine);
-	Engine& operator=(const Engine&& engine);
 
 	void HandleEvent();
 	void Render();
 
-	GameMap& GetMap() const { return map_; };
+	GameMap* GetMap() const { return map_.get(); };
 	EntityManager& GetEntities() { return entities_; };
 	const EntityManager& GetEntities() const { return entities_; };
 	ItemManager& GetItem() { return items_; };
 	const ItemManager& GetItem() const { return items_; };
-	tcod::Context& GetContext() const { return context_; };
+	tcod::Context* GetContext() const { return context_.get(); };
 	tcod::Console& GetConsole() const { return console_; };
 
 	bool IsRunning() const { return isrunning_; };
@@ -51,13 +49,13 @@ public:
 
 	void SetEventHandler(const std::unique_ptr<EventHandler>& new_handler);
 private:
-	tcod::Context& context_;
+	std::unique_ptr<tcod::Context> context_;
 	tcod::Console& console_;
 	EntityManager entities_;
 	ItemManager items_;
 	std::unique_ptr<EventHandler> handler_;
 	Actor* player_;
-	GameMap& map_;
+	std::unique_ptr<GameMap> map_;
 	MapGenerator& mapgen_;
 	MessageLog messagelog_;
 	std::pair<int, int> mouseloccation_;

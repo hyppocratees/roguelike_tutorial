@@ -15,13 +15,20 @@
 
 #include <iostream>
 
-Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainMenu>(*this)), context_(context), console_(console), map_(map), isrunning_(true), mapgen_(mapgen), player_(nullptr), messagelog_(MessageLog()), mouseloccation_({0,0})
+Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainMenu>(*this)), context_(std::make_unique<tcod::Context>(std::move(context.get_ptr()))), console_(console), map_(std::make_unique<GameMap>(map)), isrunning_(true), mapgen_(mapgen), player_(nullptr), messagelog_(MessageLog()), mouseloccation_({ 0,0 })
 {
-	mapgen_.Generate(map_);
-	entities_.Spawn(PLAYER, map_.GetRoom(0).Center());
+	mapgen_.Generate(*map_);
+	entities_.Spawn(PLAYER, map_->GetRoom(0).Center());
 	PlaceEntities();
 	UpdateFov();
 }
+
+Engine::Engine(const Engine& engine) : entities_(EntityManager(engine.entities_)), handler_(engine.handler_->Clone()), context_(std::make_unique<tcod::Context>(std::move(engine.context_->get_ptr()))), console_(engine.console_), map_(std::make_unique<GameMap>(*engine.map_.get())), isrunning_(engine.isrunning_), mapgen_(engine.mapgen_), player_(nullptr), messagelog_(engine.messagelog_), mouseloccation_(engine.mouseloccation_)
+{
+	player_ = &entities_.Get(0);
+	UpdateFov();
+}
+
 
 void Engine::HandleEvent()
 {
@@ -37,17 +44,17 @@ void Engine::HandleEvent()
 
 void Engine::Render()
 {
-	map_.Render(console_);
+	map_->Render(console_);
 	std::vector<Actor> actors = entities_.Get();
 	std::sort(actors.begin(), actors.end(), [](const Actor a, const Actor b) { return a.GetRendOrd() < b.GetRendOrd(); });
 	for (Item& item : items_) {
-		if (map_.IsInFov(item.GetX(), item.GetY())) {
+		if (map_->IsInFov(item.GetX(), item.GetY())) {
 			console_.at(item.GetX(), item.GetY()).ch = item.GetChar();
 			console_.at(item.GetX(), item.GetY()).fg = item.GetColor();
 		}
 	}
 	for (Actor& entity : actors) {
-		if (map_.IsInFov(entity.GetX(), entity.GetY())){
+		if (map_->IsInFov(entity.GetX(), entity.GetY())){
 			console_.at(entity.GetX(), entity.GetY()).ch = entity.GetChar();
 			console_.at(entity.GetX(), entity.GetY()).fg = entity.GetColor();
 		}
@@ -59,7 +66,7 @@ void Engine::Render()
 	Renderer::RenderBar(console_, player_->GetHp(), player_->GetMaxHp(), 20, player_);
 	Renderer::RenderNamesAtMouseLocation(*this, 21, 44);
 	handler_->OnRender(console_);
-	context_.present(console_);
+	context_->present(console_);
 
 	console_.clear();
 
@@ -67,19 +74,19 @@ void Engine::Render()
 
 void Engine::UpdateFov() const
 {
-	map_.UpdateFov(player_->GetX(), player_->GetY(), FOV_RADIUS);
+	map_->UpdateFov(player_->GetX(), player_->GetY(), FOV_RADIUS);
 }
 
 void Engine::PlaceEntities()
 {
 	TCODRandom random;
-	std::vector<RectangleRoom>& rooms = map_.GetRooms();
+	std::vector<RectangleRoom>& rooms = map_->GetRooms();
 	for (RectangleRoom& room : rooms) {
 		entities_.PlaceEntities(room, MAX_MONSTER_PER_ROOM, random);
 		items_.PlaceEntities(room, MAX_ITEM_PER_ROOM, random);
 	}
-	for (Entity& entity : entities_) entity.SetMap(&map_);
-	for (Item& item : items_) item.SetMap(&map_);
+	for (Entity& entity : entities_) entity.SetMap(map_.get());
+	for (Item& item : items_) item.SetMap(map_.get());
 	player_ = &entities_.Get(0);
 }
 

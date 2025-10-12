@@ -10,6 +10,21 @@ GameMap::GameMap(int width, int height) : width_(width), height_(height), map_(w
 	console_ = tcod::Console(width_, height_);
 }
 
+GameMap::GameMap(const GameMap& gm) : width_(gm.width_), height_(gm.height_), map_(width_, height_), tiles_(gm.tiles_), console_(tcod::Console(width_, height_))
+{
+	for (int i = 0; i < width_; ++i) {
+		for (int j = 0; j < height_; ++j) {
+			map_.setProperties(i, j, gm.map_.isTransparent(i, j), gm.map_.isWalkable(i, j));
+		}
+	}
+}
+
+GameMap& GameMap::operator=(const GameMap& gm)
+{
+	GameMap out = GameMap(gm);
+	return out;
+}
+
 bool GameMap::Inbound(int x, int y) const
 {
 	return 0 <= x && x < width_ && 0 <= y && y < height_;

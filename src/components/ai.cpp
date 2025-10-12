@@ -32,7 +32,7 @@ void HostileAI::Perform(Engine& engine) {
 	int dy = target->GetY() - entity_->GetY();
 	int distance = std::max(std::abs(dx), std::abs(dy));
 	std::vector<std::pair<int, int>> path{};
-	if (engine.GetMap().IsInFov(entity_->GetX(), entity_->GetY())) {
+	if (engine.GetMap()->IsInFov(entity_->GetX(), entity_->GetY())) {
 		if (distance <= 1) return MeleeAction(*entity_, dx, dy).Perform(engine);
 		path = GetPathTo(target->GetX(), target->GetY());
 	}

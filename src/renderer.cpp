@@ -25,7 +25,7 @@ void Renderer::RenderBar(tcod::Console& console, int c_value, int max_value, int
 
 std::string Renderer::GetNamesAtLocation(int x, int y, const Engine& engine)
 {
-	if (!engine.GetMap().Inbound(x, y) || !engine.GetMap().IsInFov(x, y)) {
+	if (!engine.GetMap()->Inbound(x, y) || !engine.GetMap()->IsInFov(x, y)) {
 		return "";
 	}
 	const EntityManager& manager = engine.GetEntities();

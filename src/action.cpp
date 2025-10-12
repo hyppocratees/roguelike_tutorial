@@ -34,10 +34,10 @@ BumpAction::BumpAction(Actor& entity, int dx, int dy) : ActionWithDirection(enti
 void MovementAction::Perform(Engine& engine) const{
 	int dest_x = entity_.GetX() + dx_;
 	int dest_y = entity_.GetY() + dy_;
-	if (!engine.GetMap().Inbound(dest_x, dest_y)) {
+	if (!engine.GetMap()->Inbound(dest_x, dest_y)) {
 		return;
 	}
-	if (!engine.GetMap().GetTile(dest_x, dest_y).walkable) {
+	if (!engine.GetMap()->GetTile(dest_x, dest_y).walkable) {
 		return;
 	}
 	if (engine.GetEntities().GetBlockingEntity(dest_x, dest_y)) {

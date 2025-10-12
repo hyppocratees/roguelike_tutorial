@@ -21,7 +21,7 @@ std::unique_ptr<Action> EventHandler::Dispatch() const
 	SDL_Event event{};
 
 	SDL_PollEvent(&event);
-	engine_.GetContext().convert_event_coordinates(event);
+	engine_.GetContext()->convert_event_coordinates(event);
 	std::unique_ptr<Action> game_event = nullptr;
 	if (event.type == SDL_EVENT_KEY_DOWN)
 		game_event = EvKeydown(event);
@@ -112,7 +112,7 @@ std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) 
 
 std::unique_ptr<Action> EventHandler::EvMouseMotion(const SDL_Event& event) const
 {
-	if (engine_.GetMap().Inbound(event.motion.x, event.motion.y)){
+	if (engine_.GetMap()->Inbound(event.motion.x, event.motion.y)){
 		engine_.SetMouseLocation(event.motion.x, event.motion.y);
 	}
 	return nullptr;
@@ -319,8 +319,8 @@ std::unique_ptr<Action> SelectIndexHandler::EvKeydown(const SDL_Event& event) co
 		std::pair<int, int> dxdy = MoveKey[event.key.key];
 		x += dxdy.first * modifier;
 		y += dxdy.second * modifier;
-		x = std::max(0, std::min(x, engine_.GetMap().GetWidth() - 1));
-		y = std::max(0, std::min(y, engine_.GetMap().GetHeight() - 1));
+		x = std::max(0, std::min(x, engine_.GetMap()->GetWidth() - 1));
+		y = std::max(0, std::min(y, engine_.GetMap()->GetHeight() - 1));
 		engine_.SetMouseLocation({ x, y });
 		return nullptr;
 	}
@@ -330,7 +330,7 @@ std::unique_ptr<Action> SelectIndexHandler::EvKeydown(const SDL_Event& event) co
 }
 
 std::unique_ptr<Action> SelectIndexHandler::EvMouseMotion(const SDL_Event& event) const {
-	if (engine_.GetMap().Inbound(event.motion.x, event.motion.y)) {
+	if (engine_.GetMap()->Inbound(event.motion.x, event.motion.y)) {
 		if (event.button.button == SDL_BUTTON_LEFT) {
 			return OnIndexSelected(event.motion.x, event.motion.y);
 		}
