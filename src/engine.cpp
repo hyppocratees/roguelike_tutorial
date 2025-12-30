@@ -14,6 +14,7 @@
 #include "setup_game.h"
 
 #include <iostream>
+#include <fstream>
 
 Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainMenu>(*this)), context_(std::make_unique<tcod::Context>(std::move(context.get_ptr()))), console_(console), map_(std::make_unique<GameMap>(map)), isrunning_(true), mapgen_(mapgen), player_(nullptr), messagelog_(MessageLog()), mouseloccation_({ 0,0 })
 {
@@ -107,4 +108,31 @@ void Engine::HandleDeath()
 void Engine::SetEventHandler(const std::unique_ptr<EventHandler>& new_handler)
 {
 	handler_ = new_handler->Clone();
+}
+
+void Engine::SaveAs(const std::string& filename) const
+{
+	std::ofstream text_file(filename);
+	text_file << *this;
+}
+
+std::ostream& operator<<(std::ostream& os, const Engine& engine) {
+	os << *engine.map_ << std::endl;
+	os << engine.entities_ << std::endl;
+	os << engine.items_ << std::endl;
+	os << engine.player_->GetInventory() << std::endl;
+	return os;
+}
+
+
+std::istream& operator>>(std::istream& is, Engine& engine) {
+	is >> *engine.map_;
+	/*is >> engine.actors_;
+
+	engine.SetPlayer();
+
+	is >> engine.items_;
+	is >> engine.player_->GetInventory();
+	is >> engine.gameworld_;*/
+	return is;
 }

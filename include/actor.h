@@ -16,6 +16,9 @@ namespace {
 		case -1:
 			ai = std::make_unique<DeadAI>(&actor);
 			break;
+		case 2:
+			ai = std::make_unique<ConfusedAI>(&actor, std::make_unique<BaseAI>(&actor), 10);
+			break;
 		case 0:
 		default:
 			ai = std::make_unique<BaseAI>(&actor);
@@ -77,6 +80,9 @@ public:
 	void Die() { fighter_.Die(*this); };
 	Fighter& GetFighter() { return fighter_; };
 	[[nodiscard]] Inventory& GetInventory() { return inv_; };
+	friend std::ostream& operator<<(std::ostream& os, const Actor& actor);
+	friend std::istream& operator>>(std::istream& is, Actor& actor);
+
 protected:
 	std::unique_ptr<BaseAI> ai_;
 	Fighter fighter_;

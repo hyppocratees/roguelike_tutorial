@@ -6,6 +6,7 @@
 #include "entity_factory.h"
 
 #include <iostream>
+#include <fstream>
 
 Actor& EntityManager::Spawn(const Actor& src)
 {
@@ -44,4 +45,33 @@ Actor* EntityManager::GetBlockingEntity(int x, int y)
 		if (entity.GetX() == x && entity.GetY() == y && entity.BlockMov()) return &entity;
 	}
 	return nullptr;
+}
+
+Actor& EntityManager::GetPlayer() {
+	for (auto& ac : entities_) {
+		if (ac.GetName() == "player") {
+			return ac;
+		}
+	}
+}
+
+std::ostream& operator<<(std::ostream& os, const EntityManager& am) {
+	size_t size = am.entities_.size();
+	os << size << "\n";
+	for (auto& actor : am.entities_) {
+		os << actor;
+	}
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, EntityManager& am) {
+	size_t size;
+	is >> size;
+	am.entities_.reserve(size);
+	for (auto i = 0; i < size; ++i) {
+		Actor actor;
+		is >> actor;
+		am.Spawn(actor);
+	}
+	return is;
 }

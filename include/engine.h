@@ -48,6 +48,13 @@ public:
 	MessageLog& GetMessage() { return messagelog_; };
 
 	void SetEventHandler(const std::unique_ptr<EventHandler>& new_handler);
+
+	void SaveAs(const std::string& filename) const;    
+	void SetPlayer() { player_ = &entities_.GetPlayer();};
+
+	friend std::ostream& operator<<(std::ostream& os, const Engine& engine);
+	friend std::istream& operator>>(std::istream& is, Engine& engine);
+
 private:
 	std::unique_ptr<tcod::Context> context_;
 	tcod::Console& console_;

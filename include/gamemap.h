@@ -1,8 +1,9 @@
 #pragma once
 #include "tile_types.h"
 #include <libtcod/libtcod.hpp>
-#include <vector>
 #include <libtcod/fov.hpp>
+#include <fstream>
+#include <vector>
 
 class RectangleRoom;
 
@@ -27,6 +28,10 @@ public:
 	TCODMap* GetMap() { return &map_; };
 	int GetWidth() const { return width_; };
 	int GetHeight() const { return height_; };
+	friend std::ostream& operator<<(std::ostream& os, const GameMap& map);
+	friend std::istream& operator>>(std::istream& is, GameMap& map);
+
+
 private:
 	int width_;
 	int height_;

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <utility>
+#include <fstream>
 
 class Actor;
 class RectangleRoom;
@@ -16,6 +17,7 @@ public:
     Actor* GetBlockingEntity(int x, int y);
     Actor& Get(int index) { return entities_.at(index); };
     std::vector<Actor> Get() { return entities_; };
+    Actor& GetPlayer();
 
     std::vector<Actor>::iterator begin()
     {
@@ -36,6 +38,9 @@ public:
     {
         return entities_.end();
     }
+    friend std::ostream& operator<<(std::ostream& os, const EntityManager& am);
+    friend std::istream& operator>>(std::istream& is, EntityManager& am);
+
 private:
 	std::vector<Actor> entities_;
 };

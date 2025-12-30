@@ -2,6 +2,7 @@
 #include <vector>
 #include <libtcod/fov.hpp>
 #include "procgen.h"
+#include <fstream>
 
 GameMap::GameMap(int width, int height) : width_(width), height_(height), map_(width_, height_)
 {
@@ -94,3 +95,41 @@ void GameMap::SetTile(int col, int line, tile tiletype)
 }
 
 
+std::ostream& operator<<(std::ostream& os, const GameMap& map) {
+	// std::cout << "saving map" << std::endl;
+	os << map.height_ << " " << map.width_ << std::endl;
+	for (int i = 0; i < map.tiles_.size(); ++i) {
+		int pos_y = i /map.width_;
+		int pos_x = i - pos_y * map.width_;
+		os << pos_x << " " << pos_y << " " << map.tiles_.at(i).tile_type << " " << map.tiles_.at(i).explored << std::endl;
+
+	}
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, GameMap& map) {
+	//std::cout << "reading map" << std::endl;
+	is >> map.height_ >> map.width_;
+	map.tiles_ = std::vector<tile>(map.width_ * map.height_, twall);
+	for (int i = 0; i < map.width_ * map.height_; ++i) {
+		int pos_y = 0;
+		int pos_x = 0;
+		is >> pos_x >> pos_y;
+		int index = map.width_ * pos_y + pos_x;
+		unsigned short tile_type;
+		switch (tile_type) {
+		case 0:
+			map.tiles_.at(index) = tfloor; 
+			map.map_.setProperties(pos_x, pos_y, tfloor.transparent, tfloor.walkable);
+			break;
+		case 1:
+		default:
+			map.tiles_.at(index) = twall; 
+			map.map_.setProperties(pos_x, pos_y, twall.transparent, twall.walkable);
+		}
+		
+		is >> map.tiles_.at(index).explored;
+		}
+	
+	return is;
+}

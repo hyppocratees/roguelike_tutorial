@@ -44,7 +44,7 @@ public:
 	ConfusedAI(Actor* entity, BaseAI* prevAI, int turn_remaining) : BaseAI(entity), turn_remaining_(turn_remaining) {
 		prevAI_ = prevAI->Clone();
 	}
-
+	virtual int GetAiType() const { return 2; };
 	virtual std::unique_ptr<BaseAI> Clone() const;
 	virtual void Perform(Engine& engine);
 private:
