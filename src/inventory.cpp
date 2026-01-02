@@ -16,3 +16,25 @@ void Inventory::Remove(Item& item)
 		inventory_.erase(it);
 	}
 }
+
+std::ostream& operator<<(std::ostream& os, const Inventory& inv)
+{
+	os << inv.capacity_ << "\n";
+	int num_elem = inv.inventory_.size();
+	os << num_elem << "\n";
+	for (int i = 0; i < num_elem; ++i) {
+		os << inv.inventory_.at(i);
+	}
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, Inventory& inv)
+{
+	is >> inv.capacity_;
+	int num_elem = 0;
+	is >> num_elem;
+	for (int i = 0; i < num_elem; ++i) {
+		is >> inv.inventory_.at(i);
+	}
+	return is;
+}

@@ -8,7 +8,8 @@
 
 namespace {
 	std::unique_ptr<BaseAI> GetAIType(int ai_type, Actor& actor) {
-		std::unique_ptr<BaseAI> ai;
+		std::unique_ptr<BaseAI> ai; 
+		std::unique_ptr<BaseAI> prev_ai = std::make_unique<BaseAI>(&actor);
 		switch (ai_type) {
 		case 1:
 			ai = std::make_unique<HostileAI>(&actor);
@@ -17,7 +18,7 @@ namespace {
 			ai = std::make_unique<DeadAI>(&actor);
 			break;
 		case 2:
-			ai = std::make_unique<ConfusedAI>(&actor, std::make_unique<BaseAI>(&actor), 10);
+			ai = std::make_unique<ConfusedAI>(&actor, prev_ai, 10);
 			break;
 		case 0:
 		default:

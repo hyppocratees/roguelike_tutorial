@@ -35,11 +35,11 @@ std::istream& operator>>(std::istream& is, Actor& ac) {
     int remaining_turn;
     switch (ai_type) {
     case 0:
-        ai = std::make_unique<BaseAI>(ac);
+        ai = std::make_unique<BaseAI>(&ac);
         ac.SetAI(ai);
         break;
     case 1:
-        ai = std::make_unique<HostileAI>(ac);
+        ai = std::make_unique<HostileAI>(&ac);
         ac.SetAI(ai);
         break;
     case 2:
@@ -47,21 +47,24 @@ std::istream& operator>>(std::istream& is, Actor& ac) {
         switch (prev_ai_type)
         {
         case 0:
-            prev_ai = std::make_unique<BaseAI>(ac);
+            prev_ai = std::make_unique<BaseAI>(&ac);
             break;
         case 1:
-            prev_ai = std::make_unique<HostileAI>(ac);
+            prev_ai = std::make_unique<HostileAI>(&ac);
             break;
         default:
-            prev_ai = std::make_unique<BaseAI>(ac);
+            prev_ai = std::make_unique<BaseAI>(&ac);
         }
-        ai = std::make_unique<ConfusedAI>(ac, prev_ai, remaining_turn);
+        ai = std::make_unique<ConfusedAI>(&ac, prev_ai, remaining_turn);
         ac.SetAI(ai);
         break;
     default:
+        ai = std::make_unique<DeadAI>(&ac);
         ac.SetAI(ai);
     }
     is >> ac.fighter_;
+    ac.fighter_.SetEntity(&ac);
     is >> ac.inv_;
+    ac.inv_.SetOwner(&ac);
     return is;
 }

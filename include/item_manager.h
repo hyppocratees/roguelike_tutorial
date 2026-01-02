@@ -37,6 +37,10 @@ public:
     {
         return items_.end();
     }
+
+    friend std::ostream& operator<<(std::ostream& os, const ItemManager& im);
+    friend std::istream& operator>>(std::istream& is, ItemManager& im);
+
 private:
 	std::vector<Item> items_;
 };

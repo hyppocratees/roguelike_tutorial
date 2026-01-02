@@ -17,7 +17,11 @@ public:
 	virtual std::unique_ptr<Action> GetAction(Actor& consumer) const;
 	virtual std::unique_ptr<Action> GetAction(Engine& engine, Actor& consumer, Item& item) const;
 	virtual bool Activate(Engine& engine, const ItemAction const* action) const = 0;
-	virtual std::unique_ptr<Consumable> Clone() = 0;
+	virtual std::unique_ptr<Consumable> Clone() = 0;	
+
+	friend std::ostream& operator<<(std::ostream& os, const Consumable& ai);
+
+	virtual void ToText(std::ostream& os) const;
 };
 
 class HealingConsumable : public Consumable {
@@ -26,6 +30,8 @@ public:
 	HealingConsumable(int amount, Entity* entity) : Consumable(entity), amount_(amount) {}
 	virtual bool Activate(Engine& engine, const ItemAction const* action) const;
 	virtual std::unique_ptr<Consumable> Clone() { return std::make_unique<HealingConsumable>(amount_); };
+
+	virtual void ToText(std::ostream& os) const;
 private:
 	int amount_;
 };
@@ -35,6 +41,8 @@ public:
 	LightningDamageConsumable(int damage, int max_range) : Consumable(), damage_(damage), max_range_(max_range) {};
 	virtual std::unique_ptr<Consumable> Clone() { return std::make_unique<LightningDamageConsumable>(damage_, max_range_); };
 	virtual bool Activate(Engine& engine, const ItemAction const* action) const;
+
+	virtual void ToText(std::ostream& os) const;
 private:
 	int damage_;
 	int max_range_;
@@ -46,6 +54,8 @@ public:
 	virtual std::unique_ptr<Consumable> Clone() { return std::make_unique<ConfusionConsumable>(number_turn_); };
 	virtual bool Activate(Engine& engine, const ItemAction const* action) const;
 	virtual std::unique_ptr<Action> GetAction(Engine& engine, Actor& consumer, Item& item) const;
+
+	virtual void ToText(std::ostream& os) const;
 private:
 	int number_turn_;
 };
@@ -56,6 +66,8 @@ public:
 	virtual std::unique_ptr<Consumable> Clone() { return std::make_unique<FireballConsumable>(damage_, radius_); };
 	virtual bool Activate(Engine& engine, const ItemAction const* action) const;
 	virtual std::unique_ptr<Action> GetAction(Engine& engine, Actor& consumer, Item& item) const;
+
+	virtual void ToText(std::ostream& os) const;
 private:
 	int damage_;
 	int radius_;

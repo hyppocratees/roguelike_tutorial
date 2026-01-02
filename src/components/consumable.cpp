@@ -117,3 +117,32 @@ std::unique_ptr<Action> FireballConsumable::GetAction(Engine& engine, Actor& con
 	engine.SetEventHandler(std::make_unique<AreaRangedAttackHandler>(engine, radius_, [&](int x, int y) {ItemAction(consumer, item, { x, y }).Perform(engine); }));
 	return std::make_unique<ItemAction>(consumer, (Item&)*entity_);
 }
+
+void Consumable::ToText(std::ostream& os) const {
+	os << 0 << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& os, const Consumable& cons) {
+	cons.ToText(os);
+	return os;
+}
+
+void HealingConsumable::ToText(std::ostream& os) const {
+	os << 1 << std::endl;
+	os << amount_ << "\n";
+}
+
+void FireballConsumable::ToText(std::ostream& os) const {
+	os << 2 << std::endl;
+	os << damage_ << " " << radius_ << "\n";
+}
+
+void LightningDamageConsumable::ToText(std::ostream& os) const {
+	os << 3 << std::endl;
+	os << damage_ << " " << max_range_ << "\n";
+}
+
+void ConfusionConsumable::ToText(std::ostream& os) const {
+	os << 4 << std::endl;
+	os << number_turn_ << "\n";
+}

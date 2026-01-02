@@ -2,6 +2,8 @@
 #include <algorithm>
 #include "components/base_component.h"
 
+#include <iostream>
+
 class Actor;
 
 class Fighter : public BaseComponent {
@@ -19,6 +21,8 @@ public:
 	void Die(Actor& actor);
 	int Heal(int amount);
 	void TakeDamage(int amount) { hp_ -= amount; };
+	friend std::ostream& operator<<(std::ostream& os, const Fighter& fighter);
+	friend std::istream& operator>>(std::istream& is, Fighter& fighter);
 private:
 	int max_hp_;
 	int hp_; 

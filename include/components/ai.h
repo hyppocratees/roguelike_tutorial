@@ -15,6 +15,11 @@ public:
 	virtual std::vector<std::pair<int, int>> GetPathTo(int dest_x, int dest_y);
 	virtual int GetAiType() const { return 0; };
 	virtual std::unique_ptr<BaseAI> Clone() const;
+
+	friend std::ostream& operator<<(std::ostream& os, const BaseAI& ai);
+
+	virtual void ToText(std::ostream& os) const;
+
 protected:
 	Actor* entity_;
 };
@@ -25,6 +30,7 @@ public:
 	virtual void Perform(Engine& engine); 
 	virtual int GetAiType() const { return 1; };
 	virtual std::unique_ptr<BaseAI> Clone() const;
+	virtual void ToText(std::ostream& os) const;
 };
 
 class DeadAI : public BaseAI {
@@ -34,6 +40,7 @@ public:
 	virtual std::vector<std::pair<int, int>> GetPathTo(int dest_x, int dest_y) { return {}; };
 	virtual int GetAiType() const { return -1; };
 	virtual std::unique_ptr<BaseAI> Clone() const;
+	virtual void ToText(std::ostream& os) const;
 };
 
 class ConfusedAI : public BaseAI {
@@ -47,6 +54,7 @@ public:
 	virtual int GetAiType() const { return 2; };
 	virtual std::unique_ptr<BaseAI> Clone() const;
 	virtual void Perform(Engine& engine);
+	virtual void ToText(std::ostream& os) const;
 private:
 	int turn_remaining_;
 	std::unique_ptr<BaseAI> prevAI_;

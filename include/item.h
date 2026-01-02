@@ -42,6 +42,9 @@ public:
 
 	bool IsConsumable() const { return consumable_ != nullptr; };
 
+	friend std::ostream& operator<<(std::ostream& os, const Item& item);
+	friend std::istream& operator>>(std::istream& is, Item& item);
+
 private:
 	std::unique_ptr<Consumable> consumable_;
 };

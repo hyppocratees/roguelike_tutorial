@@ -33,3 +33,27 @@ void ItemManager::PlaceEntities(RectangleRoom& room, int max_item_per_room, TCOD
 		
 	}
 }
+
+std::ostream& operator<<(std::ostream& os, const ItemManager& im)
+{
+	size_t size = im.items_.size();
+	os << size << "\n";
+	for (const Item& item : im.items_) {
+		os << item;
+	}
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, ItemManager& im)
+{
+	size_t size;
+	is >> size;
+	im.items_.reserve(size);
+	for (auto i = 0; i < size; ++i) {
+		Item item;
+		is >> item;
+		im.Spawn(item);
+	}
+
+	return is;
+}

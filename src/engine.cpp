@@ -127,12 +127,11 @@ std::ostream& operator<<(std::ostream& os, const Engine& engine) {
 
 std::istream& operator>>(std::istream& is, Engine& engine) {
 	is >> *engine.map_;
-	/*is >> engine.actors_;
+	is >> engine.entities_;
 
 	engine.SetPlayer();
 
 	is >> engine.items_;
 	is >> engine.player_->GetInventory();
-	is >> engine.gameworld_;*/
 	return is;
 }

@@ -13,6 +13,7 @@
 #include <memory>
 
 void EscapeAction::Perform(Engine& engine) const {
+	engine.SaveAs("savegame.sav");
 	engine.Quit();
 }
 

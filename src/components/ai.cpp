@@ -74,3 +74,28 @@ void ConfusedAI::Perform(Engine& engine) {
 	auto action = BumpAction(*entity_, rx, ry);
 	action.Perform(engine);
 }
+
+void BaseAI::ToText(std::ostream& os) const {
+	os << 0;
+}
+
+void HostileAI::ToText(std::ostream& os) const {
+	os << 1;
+}
+
+void ConfusedAI::ToText(std::ostream& os) const {
+	os << 2 << "\n";
+	os << turn_remaining_ << " ";
+	prevAI_->ToText(os);
+}
+
+void DeadAI::ToText(std::ostream& os) const {
+	os << -1 << "\n";
+}
+
+
+std::ostream& operator<<(std::ostream& os, const BaseAI& ai)
+{
+	ai.ToText(os);
+	return os;
+}
