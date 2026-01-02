@@ -94,3 +94,7 @@ public:
     DropAction(Actor& entity, Item& item) : ItemAction(entity, item) {};
     void virtual Perform(Engine& engine) const;
 };
+
+class LoadAction : public Action {
+    void virtual Perform(Engine& engine) const;
+};

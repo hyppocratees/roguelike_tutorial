@@ -44,8 +44,7 @@ std::unique_ptr<Action> MainMenu::EvKeydown(const SDL_Event& event) const {
     case SDLK_Q:
         return std::make_unique<EscapeAction>();
     case SDLK_C:
-        //TODO load the game here
-        break;
+        return std::make_unique<LoadAction>();
     case SDLK_N:
         return std::make_unique<ReturnToMainGame>();
     }

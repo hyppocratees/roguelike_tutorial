@@ -110,6 +110,12 @@ void Engine::SetEventHandler(const std::unique_ptr<EventHandler>& new_handler)
 	handler_ = new_handler->Clone();
 }
 
+void Engine::LoadGame(std::string& filename)
+{
+	std::ifstream save_file(filename);
+	save_file >> *this;
+}
+
 void Engine::SaveAs(const std::string& filename) const
 {
 	std::ofstream text_file(filename);

@@ -49,6 +49,7 @@ public:
 
 	void SetEventHandler(const std::unique_ptr<EventHandler>& new_handler);
 
+	void LoadGame(std::string& filename);
 	void SaveAs(const std::string& filename) const;    
 	void SetPlayer() { player_ = &entities_.GetPlayer();};
 

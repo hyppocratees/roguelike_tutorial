@@ -117,6 +117,7 @@ std::istream& operator>>(std::istream& is, GameMap& map) {
 		is >> pos_x >> pos_y;
 		int index = map.width_ * pos_y + pos_x;
 		unsigned short tile_type;
+		is >> tile_type;
 		switch (tile_type) {
 		case 0:
 			map.tiles_.at(index) = tfloor; 

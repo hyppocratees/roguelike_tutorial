@@ -13,7 +13,7 @@
 #include <memory>
 
 void EscapeAction::Perform(Engine& engine) const {
-	engine.SaveAs("savegame.sav");
+	engine.SaveAs("../savegame.sav");
 	engine.Quit();
 }
 
@@ -130,4 +130,10 @@ void PickupAction::Perform(Engine& engine) const {
 void DropAction::Perform(Engine& engine) const {
 	engine.GetItem().Spawn(item_, actor_.GetPos());
 	actor_.GetInventory().Drop(item_);
+}
+
+void LoadAction::Perform(Engine& engine) const {
+	std::string savename = "../savegame.sav";
+	engine.LoadGame(savename);
+	engine.SetEventHandler(std::make_unique<MainGameEventHandler>(engine));
 }
