@@ -55,6 +55,11 @@ Actor& EntityManager::GetPlayer() {
 	}
 }
 
+void EntityManager::Clear()
+{
+	entities_.clear();
+}
+
 std::ostream& operator<<(std::ostream& os, const EntityManager& am) {
 	size_t size = am.entities_.size();
 	os << size << "\n";
@@ -65,6 +70,7 @@ std::ostream& operator<<(std::ostream& os, const EntityManager& am) {
 }
 
 std::istream& operator>>(std::istream& is, EntityManager& am) {
+	am.Clear();
 	size_t size;
 	is >> size;
 	am.entities_.reserve(size);

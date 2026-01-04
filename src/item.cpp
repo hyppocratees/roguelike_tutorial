@@ -9,6 +9,8 @@ std::ostream& operator<<(std::ostream& os, const Item& item) {
 	os << item.char_ << "\n";
 	os << item.x_ << " " << item.y_ << "\n";
 	os << item.block_mov_ << "\n";
+	os << item.rend_ord_ << "\n";
+	os << item.color_ << "\n";
 	if (item.consumable_) {
 		os << "1" << "\n";
 		os << *item.consumable_ << "\n";
@@ -25,6 +27,8 @@ std::istream& operator>>(std::istream& is, Item& item) {
 	is >> item.char_;
 	is >> item.x_ >> item.y_;
 	is >> item.block_mov_;
+	is >> item.rend_ord_;
+	is >> item.color_;
 	bool has_consumable = false;
 	is >> has_consumable;
 	if (has_consumable) {

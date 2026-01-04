@@ -125,6 +125,9 @@ std::unique_ptr<Action> GameOverEventHandler::EvKeydown(const SDL_Event& event) 
 	case SDLK_ESCAPE:
 		action = std::make_unique<EscapeAction>();
 		break;
+	case SDLK_KP_ENTER:
+		// TODO add new game
+		break;
 	default:
 		break;
 	}
@@ -327,6 +330,7 @@ std::unique_ptr<Action> SelectIndexHandler::EvKeydown(const SDL_Event& event) co
 	else if (event.key.key == SDLK_RETURN || event.key.key == SDLK_KP_ENTER || event.key.key == SDLK_CLEAR || event.key.key == SDLK_ESCAPE) {
 		return OnIndexSelected(engine_.GetMouseLocation());
 	}
+	return nullptr;
 }
 
 std::unique_ptr<Action> SelectIndexHandler::EvMouseMotion(const SDL_Event& event) const {

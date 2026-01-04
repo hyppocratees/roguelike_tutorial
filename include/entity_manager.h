@@ -18,6 +18,7 @@ public:
     Actor& Get(int index) { return entities_.at(index); };
     std::vector<Actor> Get() { return entities_; };
     Actor& GetPlayer();
+    void Clear();
 
     std::vector<Actor>::iterator begin()
     {

@@ -114,6 +114,9 @@ void Engine::LoadGame(std::string& filename)
 {
 	std::ifstream save_file(filename);
 	save_file >> *this;
+	for (auto& actor : entities_) {
+		actor.SetMap(GetMap());
+	}
 }
 
 void Engine::SaveAs(const std::string& filename) const
@@ -136,6 +139,7 @@ std::istream& operator>>(std::istream& is, Engine& engine) {
 	is >> engine.entities_;
 
 	engine.SetPlayer();
+
 
 	is >> engine.items_;
 	is >> engine.player_->GetInventory();

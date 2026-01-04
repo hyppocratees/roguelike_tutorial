@@ -34,6 +34,10 @@ void ItemManager::PlaceEntities(RectangleRoom& room, int max_item_per_room, TCOD
 	}
 }
 
+void ItemManager::Clear() {
+	items_.clear();
+}
+
 std::ostream& operator<<(std::ostream& os, const ItemManager& im)
 {
 	size_t size = im.items_.size();
@@ -46,6 +50,7 @@ std::ostream& operator<<(std::ostream& os, const ItemManager& im)
 
 std::istream& operator>>(std::istream& is, ItemManager& im)
 {
+	im.Clear();
 	size_t size;
 	is >> size;
 	im.items_.reserve(size);

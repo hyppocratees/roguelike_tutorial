@@ -17,6 +17,8 @@ public:
     Item& Get(int index) { return items_.at(index); };
     std::vector<Item> Get() { return items_; };
     void Remove(Item& item) { items_.erase(std::remove(items_.begin(), items_.end(), item)); };
+    void Clear();
+
 
     std::vector<Item>::iterator begin()
     {

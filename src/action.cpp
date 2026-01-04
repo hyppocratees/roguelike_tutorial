@@ -83,7 +83,7 @@ void BumpAction::Perform(Engine& engine) const {
 void DieAction::Perform(Engine& engine) const {
 	std::string death_message;
 	tcod::ColorRGB death_color;
-	if (entity_.GetName() == "player") {
+	if (entity_.GetName().find("player") != std::string::npos) {
 		death_message = "You died!";
 		death_color = player_die;
 		engine.HandleDeath();
@@ -93,7 +93,7 @@ void DieAction::Perform(Engine& engine) const {
 		death_color = enemy_die;
 	}
 	engine.AddMessage(death_message, death_color);
-	entity_.Die();
+	//entity_.Die();
 
 }
 

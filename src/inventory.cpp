@@ -31,10 +31,13 @@ std::ostream& operator<<(std::ostream& os, const Inventory& inv)
 std::istream& operator>>(std::istream& is, Inventory& inv)
 {
 	is >> inv.capacity_;
+	inv.inventory_.reserve(inv.capacity_);
 	int num_elem = 0;
 	is >> num_elem;
 	for (int i = 0; i < num_elem; ++i) {
-		is >> inv.inventory_.at(i);
+		Item item;
+		is >> item;
+		inv.inventory_.emplace_back(item);
 	}
 	return is;
 }

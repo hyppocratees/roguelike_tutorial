@@ -17,6 +17,8 @@ std::ostream& operator<<(std::ostream& os, const Actor& ac) {
     os << (*ac.ai_) << "\n";
     os << ac.fighter_;
     os << ac.inv_ << "\n";
+    os << ac.rend_ord_ << "\n";
+    os << ac.color_ << "\n";
     return os;
 }
 
@@ -36,11 +38,9 @@ std::istream& operator>>(std::istream& is, Actor& ac) {
     switch (ai_type) {
     case 0:
         ai = std::make_unique<BaseAI>(&ac);
-        ac.SetAI(ai);
         break;
     case 1:
         ai = std::make_unique<HostileAI>(&ac);
-        ac.SetAI(ai);
         break;
     case 2:
         is >> remaining_turn >> prev_ai_type;
@@ -56,15 +56,16 @@ std::istream& operator>>(std::istream& is, Actor& ac) {
             prev_ai = std::make_unique<BaseAI>(&ac);
         }
         ai = std::make_unique<ConfusedAI>(&ac, prev_ai, remaining_turn);
-        ac.SetAI(ai);
         break;
     default:
         ai = std::make_unique<DeadAI>(&ac);
-        ac.SetAI(ai);
     }
+    ac.ai_ = std::move(ai);
     is >> ac.fighter_;
     ac.fighter_.SetEntity(&ac);
     is >> ac.inv_;
     ac.inv_.SetOwner(&ac);
+    is >> ac.rend_ord_;
+    is >> ac.color_;
     return is;
 }
