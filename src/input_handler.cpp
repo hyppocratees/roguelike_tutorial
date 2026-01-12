@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <libtcod/libtcod.hpp>
 #include <string>
+#include <iostream>
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
@@ -103,6 +104,12 @@ std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) 
 		break;
 	case SDLK_L:
 		engine_.SetEventHandler(std::make_unique<LookHandler>(engine_));
+		break;	
+	case SDLK_LESS:
+		if (event.key.mod & SDL_KMOD_SHIFT){
+			action = std::make_unique<TakeDownStairAction>();
+			break;
+		}
 		break;
 	default:
 		break;
@@ -127,7 +134,7 @@ std::unique_ptr<Action> GameOverEventHandler::EvKeydown(const SDL_Event& event) 
 		action = std::make_unique<EscapeAction>();
 		break;
 	case SDLK_KP_ENTER:
-		// TODO add new game
+		action = std::make_unique<GenerateLevel>();
 		break;
 	default:
 		break;

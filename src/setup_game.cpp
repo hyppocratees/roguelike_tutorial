@@ -5,6 +5,7 @@
 #include "color.h"
 #include "action.h"
 #include "handler_factory.h"
+#include "gameworld.h"
 
 #include <memory>
 #include <libtcod.hpp>
@@ -16,9 +17,9 @@ Engine NewGame(tcod::Console& console, TCOD_ContextParams& params)
 
     GameMap gamemap(MAP_WIDTH, MAP_HEIGTH);
 
-    MapGenerator mapgen(MAP_WIDTH, MAP_HEIGTH, ROOM_MIN_SIZE, ROOM_MAX_SIZE, MAX_ROOMS);
+    GameWorld gameworld(MAP_WIDTH, MAP_HEIGTH, ROOM_MIN_SIZE, ROOM_MAX_SIZE, MAX_ROOMS);
 
-    Engine engine(context, console, gamemap, mapgen);
+    Engine engine(context, console, gamemap, gameworld);
 
     engine.AddMessage("Hello and welcome, adventurer, to yet another dungeon", welcome_text);
 

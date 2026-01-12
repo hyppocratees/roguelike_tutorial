@@ -28,6 +28,7 @@ private:
 class MapGenerator {
 public:
 	MapGenerator(int map_height, int map_width, int room_min_size, int room_max_size, int max_rooms);
+	MapGenerator(const MapGenerator& mapgen) : map_height_(mapgen.map_height_), map_width_(mapgen.map_width_), room_min_size_(mapgen.room_min_size_), room_max_size_(mapgen.room_max_size_), max_rooms_(mapgen.max_rooms_) {}
 	void Generate(GameMap& gamemap) const;
 private:
 	void GenerateRoom(GameMap& gamemap,const RectangleRoom& room) const;

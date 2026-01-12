@@ -29,9 +29,10 @@ public:
 	TCODMap* GetMap() { return &map_; };
 	int GetWidth() const { return width_; };
 	int GetHeight() const { return height_; };
+	std::pair<int, int> GetDownStairLocation() const { return downstair_loc_; }
 	friend std::ostream& operator<<(std::ostream& os, const GameMap& map);
 	friend std::istream& operator>>(std::istream& is, GameMap& map);
-	void SetDawnStairLocation(std::pair<int, int>loc) { downstair_loc_ = loc; };
+	void SetDownStairLocation(std::pair<int, int>loc) { downstair_loc_ = loc; };
 
 private:
 	int width_;

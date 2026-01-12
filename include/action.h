@@ -109,3 +109,11 @@ public:
 private:
     std::unique_ptr<EventHandler> handler_;
 };
+
+class GenerateLevel : public Action {
+    void virtual Perform(Engine& engine) const;
+};
+
+class TakeDownStairAction : public Action {
+    void virtual Perform(Engine& engine) const;
+};

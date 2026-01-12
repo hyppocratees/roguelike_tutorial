@@ -118,5 +118,5 @@ void MapGenerator::Generate(GameMap& gamemap) const
 		center_of_last_room = room.Center();
 	}
 	gamemap.SetTile(center_of_last_room.first, center_of_last_room.second, tdownstairs);
-	gamemap.SetDawnStairLocation(center_of_last_room);
+	gamemap.SetDownStairLocation(center_of_last_room);
 }

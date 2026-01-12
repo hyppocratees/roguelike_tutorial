@@ -152,3 +152,16 @@ void SetHandlerAction::Perform(Engine& engine) const {
 	engine.SetEventHandler(HandlerFactory::GetHandler(engine, handler_->Type()));
 }
 
+void TakeDownStairAction::Perform(Engine& engine) const {
+	if (engine.GetPlayer()->GetPos() == engine.GetMap()->GetDownStairLocation()) {
+		engine.GetGameWorld().GenerateFloor(*engine.GetMap());
+		engine.AddMessage("You descend the staircase", descend);
+	}
+	else {
+		engine.AddMessage("There is no stairs here", invalid);
+	}
+}
+
+void GenerateLevel::Perform(Engine& engine) const {
+	engine.GetGameWorld().GenerateFloor(*engine.GetMap());
+}

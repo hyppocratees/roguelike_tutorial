@@ -14,6 +14,9 @@
 #include "color.h"
 
 int main(int argc, char* argv[]) {
+
+    SDL_SetEventEnabled(SDL_EVENT_TEXT_INPUT, true);
+
     tcod::Console console = tcod::Console{SCREEN_WIDTH, SCREEN_HEIGTH};  // Main console.
 
     // Configure the context.

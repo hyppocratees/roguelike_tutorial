@@ -10,7 +10,7 @@
 #include "gamemap.h"
 #include "entity_manager.h"
 #include "item_manager.h"
-#include "procgen.h"
+#include "gameworld.h"
 #include "message_log.h"
 
 enum GameState {
@@ -21,7 +21,7 @@ enum GameState {
 class Engine {
 public:
 
-	Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen);
+	Engine(tcod::Context& context, tcod::Console& console, GameMap& map, GameWorld& gameworld);
 	Engine(const Engine& engine);
 
 	void HandleEvent();
@@ -58,6 +58,8 @@ public:
 	void SetPlayer() { player_ = &entities_.GetPlayer();};
 	void SetGameState(GameState new_state_) { current_state_ = new_state_; }
 
+	GameWorld& GetGameWorld() { return gameworld_; }
+	
 	friend std::ostream& operator<<(std::ostream& os, const Engine& engine);
 	friend std::istream& operator>>(std::istream& is, Engine& engine);
 
@@ -69,7 +71,7 @@ private:
 	std::unique_ptr<EventHandler> handler_;
 	Actor* player_;
 	std::unique_ptr<GameMap> map_;
-	MapGenerator& mapgen_;
+	GameWorld& gameworld_;
 	MessageLog messagelog_;
 	std::pair<int, int> mouseloccation_;
 	bool isrunning_;

@@ -16,15 +16,15 @@
 #include <iostream>
 #include <fstream>
 
-Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, MapGenerator& mapgen) : entities_(EntityManager()), handler_(std::make_unique<MainMenu>(*this)), context_(std::make_unique<tcod::Context>(std::move(context.get_ptr()))), console_(console), map_(std::make_unique<GameMap>(map)), isrunning_(true), mapgen_(mapgen), player_(nullptr), messagelog_(MessageLog()), mouseloccation_({ 0,0 })
+Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, GameWorld& gameworld) : entities_(EntityManager()), handler_(std::make_unique<MainMenu>(*this)), context_(std::make_unique<tcod::Context>(std::move(context.get_ptr()))), console_(console), map_(std::make_unique<GameMap>(map)), isrunning_(true), gameworld_(gameworld), player_(nullptr), messagelog_(MessageLog()), mouseloccation_({ 0,0 })
 {
-	mapgen_.Generate(*map_);
+	gameworld_.GenerateFloor(*map_);
 	entities_.Spawn(PLAYER, map_->GetRoom(0).Center());
 	PlaceEntities();
 	UpdateFov();
 }
 
-Engine::Engine(const Engine& engine) : entities_(EntityManager(engine.entities_)), handler_(engine.handler_->Clone()), context_(std::make_unique<tcod::Context>(std::move(engine.context_->get_ptr()))), console_(engine.console_), map_(std::make_unique<GameMap>(*engine.map_.get())), isrunning_(engine.isrunning_), mapgen_(engine.mapgen_), player_(nullptr), messagelog_(engine.messagelog_), mouseloccation_(engine.mouseloccation_)
+Engine::Engine(const Engine& engine) : entities_(EntityManager(engine.entities_)), handler_(engine.handler_->Clone()), context_(std::make_unique<tcod::Context>(std::move(engine.context_->get_ptr()))), console_(engine.console_), map_(std::make_unique<GameMap>(*engine.map_.get())), isrunning_(engine.isrunning_), gameworld_(engine.gameworld_), player_(nullptr), messagelog_(engine.messagelog_), mouseloccation_(engine.mouseloccation_)
 {
 	player_ = &entities_.Get(0);
 	UpdateFov();
