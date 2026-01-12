@@ -11,7 +11,7 @@ class Actor;
 class BaseAI {
 public:
 	BaseAI(Actor* entity) : entity_(entity) {};
-	virtual void Perform(Engine& engine) {};
+	virtual void Perform(Engine&) {};
 	virtual std::vector<std::pair<int, int>> GetPathTo(int dest_x, int dest_y);
 	virtual int GetAiType() const { return 0; };
 	virtual std::unique_ptr<BaseAI> Clone() const;
@@ -36,8 +36,8 @@ public:
 class DeadAI : public BaseAI {
 public:
 	DeadAI(Actor* entity) : BaseAI(entity) {};
-	virtual void Perform(Engine& engine) {};
-	virtual std::vector<std::pair<int, int>> GetPathTo(int dest_x, int dest_y) { return {}; };
+	virtual void Perform(Engine&) {};
+	virtual std::vector<std::pair<int, int>> GetPathTo(int, int) { return {}; };
 	virtual int GetAiType() const { return -1; };
 	virtual std::unique_ptr<BaseAI> Clone() const;
 	virtual void ToText(std::ostream& os) const;

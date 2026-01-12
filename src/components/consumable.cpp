@@ -16,12 +16,12 @@ std::unique_ptr<Action> Consumable::GetAction(Actor& consumer) const
 	return std::make_unique<ItemAction>(consumer, (Item&)*entity_);
 }
 
-std::unique_ptr<Action> Consumable::GetAction(Engine& engine, Actor& consumer, Item& item) const
+std::unique_ptr<Action> Consumable::GetAction(Engine&, Actor& consumer, Item&) const
 {
 	return GetAction(consumer);
 }
 
-bool HealingConsumable::Activate(Engine& engine, const ItemAction const* action) const
+bool HealingConsumable::Activate(Engine& engine, const ItemAction *const action) const
 {
 	Actor& consumer = action->GetActor();
 	int amount_recovered = consumer.GetFighter().Heal(amount_);
@@ -36,7 +36,7 @@ bool HealingConsumable::Activate(Engine& engine, const ItemAction const* action)
 	return false;
 }
 
-bool LightningDamageConsumable::Activate(Engine& engine, const ItemAction const* action) const {
+bool LightningDamageConsumable::Activate(Engine& engine, const ItemAction *const action) const {
 	Actor& consumer = action->GetActor();
 	Actor* target = nullptr;
 	double closest_dist = max_range_ + 1;
@@ -67,7 +67,7 @@ std::unique_ptr<Action> ConfusionConsumable::GetAction(Engine& engine, Actor& co
 	return std::make_unique<ItemAction>(consumer, (Item&)*entity_);
 }
 
-bool ConfusionConsumable::Activate(Engine& engine, const ItemAction const* action) const {
+bool ConfusionConsumable::Activate(Engine& engine, const ItemAction *const action) const {
 	if (!action) return false;
 	auto[x, y] = action->GetPos();
 	if (!engine.GetMap()->IsInFov(x, y)) {
@@ -90,7 +90,7 @@ bool ConfusionConsumable::Activate(Engine& engine, const ItemAction const* actio
 	return true;
 }
 
-bool FireballConsumable::Activate(Engine& engine, const ItemAction const* action) const {
+bool FireballConsumable::Activate(Engine& engine, const ItemAction *const action) const {
 	if (!action) return false;
 	auto[x, y] = action->GetPos();
 	if (!engine.GetMap()->IsInFov(x, y)) {

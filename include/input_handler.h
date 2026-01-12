@@ -14,7 +14,7 @@ class EventHandler {
 public:
 	EventHandler(Engine& engine) : engine_(engine) {}
 	virtual std::unique_ptr<Action> Dispatch() const;
-	virtual void OnRender(tcod::Console& console) {};
+	virtual void OnRender(tcod::Console&) {};
 	virtual std::unique_ptr<EventHandler> Clone() const = 0;
 	virtual HANDLER Type() const = 0;
 protected:

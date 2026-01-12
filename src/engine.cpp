@@ -37,8 +37,10 @@ void Engine::HandleEvent()
 
 	if (action) {
 		action->Perform(*this);
-		HandleEnemyTurn();
-		UpdateFov();
+		if (current_state_ == PLAYING) {
+			HandleEnemyTurn();
+			UpdateFov();
+		}
 	}
 
 }

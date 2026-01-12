@@ -13,6 +13,10 @@
 #include "procgen.h"
 #include "message_log.h"
 
+enum GameState {
+	PLAYING,
+	PAUSED
+};
 
 class Engine {
 public:
@@ -52,6 +56,7 @@ public:
 	void LoadGame(std::string& filename);
 	void SaveAs(const std::string& filename) const;    
 	void SetPlayer() { player_ = &entities_.GetPlayer();};
+	void SetGameState(GameState new_state_) { current_state_ = new_state_; }
 
 	friend std::ostream& operator<<(std::ostream& os, const Engine& engine);
 	friend std::istream& operator>>(std::istream& is, Engine& engine);
@@ -68,4 +73,5 @@ private:
 	MessageLog messagelog_;
 	std::pair<int, int> mouseloccation_;
 	bool isrunning_;
+	GameState current_state_ = PAUSED;
 };

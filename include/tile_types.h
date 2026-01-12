@@ -20,4 +20,4 @@ constexpr tile tfloor{ true, true, {'.', {255,255,255}, {50, 50, 150}}, {'.', {2
 
 constexpr tile twall{ false, false, {'#', {255,255,255}, {0, 0, 100}}, {'#', {255,255,255}, {130, 110, 50}}, false, 1 };
 
-constexpr tile tshroud{ false, false, {' ', {0, 0, 0}, {0, 0, 0}}, {' ', {0, 0, 0}, {0, 0, 0}}, false, -1 };
+constexpr tile tshroud{ false, false, {' ', {0, 0, 0}, {0, 0, 0}}, {' ', {0, 0, 0}, {0, 0, 0}}, false, 0xffff };

@@ -203,7 +203,7 @@ std::unique_ptr<EventHandler> AskUserEventHandler::Clone() const {
 	return std::make_unique<AskUserEventHandler>(*this);
 }
 
-std::unique_ptr<Action> AskUserEventHandler::EvKeydown(const SDL_Event& event) const {
+std::unique_ptr<Action> AskUserEventHandler::EvKeydown(const SDL_Event&) const {
 	std::unique_ptr<Action> action = nullptr;
 
 	action = std::make_unique<ReturnToMainGame>();
@@ -343,7 +343,7 @@ std::unique_ptr<Action> SelectIndexHandler::EvMouseMotion(const SDL_Event& event
 	return nullptr;
 }
 
-std::unique_ptr<Action> LookHandler::OnIndexSelected(int x, int y) const
+std::unique_ptr<Action> LookHandler::OnIndexSelected(int, int) const
 {
 	return std::make_unique<ReturnToMainGame>();
 }
@@ -396,7 +396,7 @@ void PopupMessage::OnRender(tcod::Console& console) {
 }
 
 
-std::unique_ptr<Action> PopupMessage::EvKeydown(const SDL_Event& event) const{ 
+std::unique_ptr<Action> PopupMessage::EvKeydown(const SDL_Event&) const{ 
 	return std::make_unique<SetHandlerAction>(parent_handler_->Clone());
 }
 

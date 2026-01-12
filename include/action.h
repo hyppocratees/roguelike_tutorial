@@ -52,7 +52,7 @@ public:
 class WaitAction : public Action {
 public:
     WaitAction(Actor& entity) : entity_(entity) {}
-    void virtual Perform(Engine& engine) const {};
+    void virtual Perform(Engine&) const {};
 protected:
     Actor& entity_;
 };

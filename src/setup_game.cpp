@@ -27,7 +27,8 @@ Engine NewGame(tcod::Console& console, TCOD_ContextParams& params)
 }
 
 void MainMenu::OnRender(tcod::Console& console) {
-    background_.blit2x(console, 0, 0);
+    tcod::draw_quartergraphics(console, background_);
+    //background_.blit2x(console, 0, 0);
     tcod::print(console, { console.get_width() / 2, console.get_height() / 2 - 4 }, "TOMB OF THE ANCIENT KINGS", menu_title, black, TCOD_CENTER, TCOD_BKGND_NONE);
     tcod::print(console, { console.get_width() / 2, console.get_height() - 2 }, "By hyppocratees", menu_title, black, TCOD_CENTER, TCOD_BKGND_NONE);
     tcod::print(console, { console.get_width() / 2, console.get_height() / 2 - 2 }, "[N] Play a new game", menu_text, black, TCOD_CENTER, TCOD_BKGND_NONE);
@@ -50,6 +51,7 @@ std::unique_ptr<Action> MainMenu::EvKeydown(const SDL_Event& event) const {
     case SDLK_N:
         return std::make_unique<ReturnToMainGame>();
     }
+    return action;
 }
 
 HANDLER MainMenu::Type() const
