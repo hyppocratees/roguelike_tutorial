@@ -126,6 +126,7 @@ void Engine::LoadGame(std::string& filename)
 	}
 
 	SetEventHandler(std::make_unique<MainGameEventHandler>(*this));
+	current_state_ = PLAYING;
 }
 
 void Engine::SaveAs(const std::string& filename) const

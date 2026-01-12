@@ -13,9 +13,15 @@
 #include <format>
 #include <libtcod/color.hpp>
 #include <memory>
+#include <filesystem>
 
 void EscapeAction::Perform(Engine& engine) const {
-	engine.SaveAs("../savegame.sav");
+	if (std::filesystem::exists("../savegame.sav")) {
+		std::filesystem::remove("../savegame.sav");
+	}
+	if (engine.GetPlayer()->IsAlive()) {
+		engine.SaveAs("../savegame.sav");
+	}
 	engine.Quit();
 }
 
