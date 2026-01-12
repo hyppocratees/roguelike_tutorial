@@ -21,3 +21,4 @@ constexpr tcod::ColorRGB need_target{ 0x3F, 0xFF, 0xFF };
 constexpr tcod::ColorRGB status_effect_applied{ 0x3F, 0xFF, 0x3F };
 constexpr tcod::ColorRGB menu_title{ 255, 255, 63 };
 constexpr tcod::ColorRGB menu_text = white;
+constexpr tcod::ColorRGB descend{ 0x9F, 0x3F, 0xFF };

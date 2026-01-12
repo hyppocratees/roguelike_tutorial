@@ -328,8 +328,11 @@ std::unique_ptr<Action> SelectIndexHandler::EvKeydown(const SDL_Event& event) co
 		engine_.SetMouseLocation({ x, y });
 		return nullptr;
 	}
-	else if (event.key.key == SDLK_RETURN || event.key.key == SDLK_KP_ENTER || event.key.key == SDLK_CLEAR || event.key.key == SDLK_ESCAPE) {
+	else if (event.key.key == SDLK_RETURN || event.key.key == SDLK_KP_ENTER || event.key.key == SDLK_CLEAR) {
 		return OnIndexSelected(engine_.GetMouseLocation());
+	}
+	else if (event.key.key == SDLK_ESCAPE) {
+		return std::make_unique<ReturnToMainGame>();
 	}
 	return nullptr;
 }

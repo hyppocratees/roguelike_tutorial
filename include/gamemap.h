@@ -4,6 +4,7 @@
 #include <libtcod/fov.hpp>
 #include <fstream>
 #include <vector>
+#include <utility>
 
 class RectangleRoom;
 
@@ -30,7 +31,7 @@ public:
 	int GetHeight() const { return height_; };
 	friend std::ostream& operator<<(std::ostream& os, const GameMap& map);
 	friend std::istream& operator>>(std::istream& is, GameMap& map);
-
+	void SetDawnStairLocation(std::pair<int, int>loc) { downstair_loc_ = loc; };
 
 private:
 	int width_;
@@ -39,4 +40,5 @@ private:
 	std::vector<RectangleRoom> rooms_{};
 	tcod::Console console_;
 	TCODMap map_;
+	std::pair<int, int> downstair_loc_{ 0, 0 };
 };

@@ -85,7 +85,7 @@ MapGenerator::MapGenerator(int map_height, int map_width, int room_min_size, int
 
 void MapGenerator::Generate(GameMap& gamemap) const
 {
-
+	std::pair<int, int> center_of_last_room{ 0,0 };
 	std::vector<RectangleRoom> rooms{};
 	TCODRandom random;
 
@@ -115,5 +115,8 @@ void MapGenerator::Generate(GameMap& gamemap) const
 		}
 		rooms.push_back(room);
 		gamemap.AddRoom(room);
+		center_of_last_room = room.Center();
 	}
+	gamemap.SetTile(center_of_last_room.first, center_of_last_room.second, tdownstairs);
+	gamemap.SetDawnStairLocation(center_of_last_room);
 }
