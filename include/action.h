@@ -4,8 +4,10 @@
 #include "item.h"
 
 #include <utility>
+#include <memory>
 
 class Engine;
+class EventHandler;
 
 class Action {
 public:
@@ -96,5 +98,14 @@ public:
 };
 
 class LoadAction : public Action {
+public:
     void virtual Perform(Engine& engine) const;
+};
+
+class SetHandlerAction : public Action {
+public:
+    SetHandlerAction(std::unique_ptr<EventHandler> handler);
+    void virtual Perform(Engine& engine) const;
+private:
+    std::unique_ptr<EventHandler> handler_;
 };

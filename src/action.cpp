@@ -6,6 +6,8 @@
 #include "color.h"
 #include "inventory.h"
 #include "item.h"
+#include "input_handler.h"
+#include "handler_factory.h"
 
 #include <iostream>
 #include <format>
@@ -135,5 +137,11 @@ void DropAction::Perform(Engine& engine) const {
 void LoadAction::Perform(Engine& engine) const {
 	std::string savename = "../savegame.sav";
 	engine.LoadGame(savename);
-	engine.SetEventHandler(std::make_unique<MainGameEventHandler>(engine));
 }
+
+SetHandlerAction::SetHandlerAction(std::unique_ptr<EventHandler> handler) : handler_(handler->Clone()) {}
+
+void SetHandlerAction::Perform(Engine& engine) const {
+	engine.SetEventHandler(HandlerFactory::GetHandler(engine, handler_->Type()));
+}
+

@@ -1,6 +1,7 @@
 ﻿#include "input_handler.h"
 #include "engine.h"
 #include "message_log.h"
+#include "handler_factory.h"
 
 #include <memory>
 #include <map>
@@ -375,4 +376,81 @@ void AreaRangedAttackHandler::OnRender(tcod::Console& console) {
 std::unique_ptr<Action> AreaRangedAttackHandler::OnIndexSelected(int x, int y) const {
 	callback_(x, y);
 	return nullptr;
+}
+
+std::unique_ptr<EventHandler> PopupMessage::Clone() const {
+	return std::make_unique<PopupMessage>(*this);
+}
+
+void PopupMessage::OnRender(tcod::Console& console) {
+	parent_handler_->OnRender(console);
+	for (auto& tile : console) {
+		tile.fg.r /= 8;
+		tile.fg.g /= 8;
+		tile.fg.b /= 8;
+		tile.bg.r /= 8;
+		tile.bg.g /= 8;
+		tile.bg.b /= 8;
+	}
+	tcod::print(console, { console.get_width() / 2, console.get_height() / 2 }, text_, white, black, TCOD_CENTER);
+}
+
+
+std::unique_ptr<Action> PopupMessage::EvKeydown(const SDL_Event& event) const{ 
+	return std::make_unique<SetHandlerAction>(parent_handler_->Clone());
+}
+
+HANDLER MainGameEventHandler::Type() const
+{
+	return MAINGAME;
+}
+
+HANDLER GameOverEventHandler::Type() const
+{
+	return GAMEOVER;
+}
+
+HANDLER HistoryViewerHandler::Type() const
+{
+	return HISTORYVIEWER;
+}
+
+HANDLER AskUserEventHandler::Type() const
+{
+	return ASKUSER;
+}
+
+HANDLER InventoryEventHandler::Type() const
+{
+	return INVENTORY;
+}
+
+HANDLER InventoryActivateHandler::Type() const
+{
+	return INVENTORYACTIVATE;
+}
+
+HANDLER InventoryDropHandler::Type() const
+{
+	return INVENTORYDROP;
+}
+
+HANDLER LookHandler::Type() const
+{
+	return LOOK;
+}
+
+HANDLER SingleRangedAttackHandler::Type() const
+{
+	return SINGLERANGE;
+}
+
+HANDLER AreaRangedAttackHandler::Type() const
+{
+	return AREARANGE;
+}
+
+HANDLER PopupMessage::Type() const
+{
+	return POPUP;
 }

@@ -113,10 +113,17 @@ void Engine::SetEventHandler(const std::unique_ptr<EventHandler>& new_handler)
 void Engine::LoadGame(std::string& filename)
 {
 	std::ifstream save_file(filename);
+	if (!save_file.is_open()) {
+		const std::unique_ptr<EventHandler> popup = std::make_unique<PopupMessage>(*this, "No game to load", handler_);
+		SetEventHandler(popup);
+		return;
+	}
 	save_file >> *this;
 	for (auto& actor : entities_) {
 		actor.SetMap(GetMap());
 	}
+
+	SetEventHandler(std::make_unique<MainGameEventHandler>(*this));
 }
 
 void Engine::SaveAs(const std::string& filename) const

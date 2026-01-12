@@ -4,6 +4,8 @@
 #include "entity_factory.h"
 #include "color.h"
 #include "action.h"
+#include "handler_factory.h"
+
 #include <memory>
 #include <libtcod.hpp>
 #include <SDL3/SDL_events.h>
@@ -48,4 +50,9 @@ std::unique_ptr<Action> MainMenu::EvKeydown(const SDL_Event& event) const {
     case SDLK_N:
         return std::make_unique<ReturnToMainGame>();
     }
+}
+
+HANDLER MainMenu::Type() const
+{
+    return MAINMENU;
 }
