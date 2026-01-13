@@ -60,6 +60,20 @@ void EntityManager::Clear()
 	entities_.clear();
 }
 
+void EntityManager::ClearNPC()
+{
+	entities_.erase(
+		std::remove_if(
+			entities_.begin(),
+			entities_.end(),
+			[](const Entity& entity) {
+				return entity.GetName() != "player"; // Garde seulement "player"
+			}
+		),
+		entities_.end()
+	);
+}
+
 std::ostream& operator<<(std::ostream& os, const EntityManager& am) {
 	size_t size = am.entities_.size();
 	os << size << "\n";

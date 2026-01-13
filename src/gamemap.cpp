@@ -67,6 +67,17 @@ RectangleRoom& GameMap::GetRoom(int index)
 	return rooms_.at(index);
 }
 
+void GameMap::Reset()
+{
+	rooms_.clear();
+	tiles_.assign(width_ * height_, twall);
+	for (int i = 0; i < width_; ++i) {
+		for (int j = 0; j < height_; ++j) {
+			map_.setProperties(i, j, tiles_.at(j * width_ + i).transparent, tiles_.at(j * width_ + i).walkable);
+		}
+	}
+}
+
 void GameMap::Update() {
 	for (int x = 0; x < width_; ++x) {
 		for (int y = 0; y < height_; ++y) {

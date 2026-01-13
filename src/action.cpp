@@ -155,7 +155,12 @@ void SetHandlerAction::Perform(Engine& engine) const {
 void TakeDownStairAction::Perform(Engine& engine) const {
 	if (engine.GetPlayer()->GetPos() == engine.GetMap()->GetDownStairLocation()) {
 		engine.GetGameWorld().GenerateFloor(*engine.GetMap());
+		engine.GetEntities().ClearNPC();
+		engine.GetItem().Clear();
+		engine.PlaceEntities();
 		engine.AddMessage("You descend the staircase", descend);
+		engine.GetPlayer()->SetX(engine.GetMap()->GetRoom(0).Center().first);
+		engine.GetPlayer()->SetY(engine.GetMap()->GetRoom(0).Center().second);
 	}
 	else {
 		engine.AddMessage("There is no stairs here", invalid);

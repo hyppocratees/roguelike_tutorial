@@ -80,7 +80,7 @@ void Engine::UpdateFov() const
 	map_->UpdateFov(player_->GetX(), player_->GetY(), FOV_RADIUS);
 }
 
-void Engine::PlaceEntities()
+void Engine::PlaceEntities(bool setplayer)
 {
 	TCODRandom random;
 	std::vector<RectangleRoom>& rooms = map_->GetRooms();
@@ -90,7 +90,7 @@ void Engine::PlaceEntities()
 	}
 	for (Entity& entity : entities_) entity.SetMap(map_.get());
 	for (Item& item : items_) item.SetMap(map_.get());
-	player_ = &entities_.Get(0);
+	if(setplayer) player_ = &entities_.Get(0);
 }
 
 void Engine::HandleEnemyTurn()

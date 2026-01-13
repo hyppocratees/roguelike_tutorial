@@ -39,7 +39,7 @@ public:
 	void Quit() { isrunning_ = false; };
 
 	void UpdateFov() const;
-	void PlaceEntities();
+	void PlaceEntities(bool setplayer = true);
 	void HandleEnemyTurn();
 	void HandleDeath();
 	Actor* GetPlayer() { return player_; };
@@ -71,7 +71,7 @@ private:
 	std::unique_ptr<EventHandler> handler_;
 	Actor* player_;
 	std::unique_ptr<GameMap> map_;
-	GameWorld& gameworld_;
+	GameWorld gameworld_;
 	MessageLog messagelog_;
 	std::pair<int, int> mouseloccation_;
 	bool isrunning_;

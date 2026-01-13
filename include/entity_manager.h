@@ -19,6 +19,7 @@ public:
     std::vector<Actor> Get() { return entities_; };
     Actor& GetPlayer();
     void Clear();
+    void ClearNPC();
 
     std::vector<Actor>::iterator begin()
     {

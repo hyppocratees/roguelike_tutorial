@@ -3,6 +3,8 @@
 #include "gamemap.h"
 #include "procgen.h"
 
+#include <iostream>
+
 class GameWorld {
 public:
 	GameWorld(int map_width, int map_height, int room_min_size, int room_max_size, int max_rooms) : pmap_gen_(std::make_unique<MapGenerator>(map_width, map_height,  room_min_size, room_max_size, max_rooms)) {};

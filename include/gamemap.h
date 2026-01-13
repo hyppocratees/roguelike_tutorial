@@ -33,6 +33,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const GameMap& map);
 	friend std::istream& operator>>(std::istream& is, GameMap& map);
 	void SetDownStairLocation(std::pair<int, int>loc) { downstair_loc_ = loc; };
+	void Reset();
 
 private:
 	int width_;
