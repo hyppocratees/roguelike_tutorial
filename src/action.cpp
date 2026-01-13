@@ -101,6 +101,7 @@ void DieAction::Perform(Engine& engine) const {
 		death_color = enemy_die;
 	}
 	engine.AddMessage(death_message, death_color);
+	engine.GetPlayer()->GetLevel().GainXp(engine, entity_.GetLevel().GetXp());
 	//entity_.Die();
 
 }

@@ -121,3 +121,9 @@ void MapGenerator::Generate(GameMap& gamemap) const
 	gamemap.SetTile(center_of_last_room.first, center_of_last_room.second, tdownstairs);
 	gamemap.SetDownStairLocation(center_of_last_room);
 }
+
+std::ostream& operator<<(std::ostream& os, const MapGenerator& mg)
+{
+	os << mg.map_height_ << " " << mg.map_width_ << " " << mg.max_rooms_ << " " << mg.room_min_size_ << " " << mg.room_max_size_ << std::endl;
+	return os;
+}

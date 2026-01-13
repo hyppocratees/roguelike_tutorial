@@ -68,6 +68,7 @@ void Engine::Render()
 
 	Renderer::RenderBar(console_, player_->GetHp(), player_->GetMaxHp(), 20, player_);
 	Renderer::RenderNamesAtMouseLocation(*this, 21, 44);
+	Renderer::RenderDungeonLevel(*this, gameworld_.GetDungeonLevel(), 0, 47);
 	handler_->OnRender(console_);
 	context_->present(console_);
 
@@ -137,6 +138,7 @@ void Engine::SaveAs(const std::string& filename) const
 
 std::ostream& operator<<(std::ostream& os, const Engine& engine) {
 	os << *engine.map_ << std::endl;
+	os << engine.gameworld_ << std::endl;
 	os << engine.entities_ << std::endl;
 	os << engine.items_ << std::endl;
 	os << engine.player_->GetInventory() << std::endl;
@@ -146,6 +148,7 @@ std::ostream& operator<<(std::ostream& os, const Engine& engine) {
 
 std::istream& operator>>(std::istream& is, Engine& engine) {
 	is >> *engine.map_;
+	is >> engine.gameworld_;
 	is >> engine.entities_;
 
 	engine.SetPlayer();

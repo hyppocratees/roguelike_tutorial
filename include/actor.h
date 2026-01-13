@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "inventory.h"
+#include "level.h"
 
 namespace {
 	std::unique_ptr<BaseAI> GetAIType(int ai_type, Actor& actor) {
@@ -31,21 +32,22 @@ namespace {
 
 class Actor : public Entity {
 public:
-	Actor() : Entity(), ai_(nullptr), fighter_(Fighter()), inv_(Inventory(0, this)) {
+	Actor() : Entity(), ai_(nullptr), fighter_(Fighter()), inv_(Inventory(0, this)), level_(this) {
 		inv_.SetOwner(this);
 		fighter_.SetEntity(this);
 	};
-	Actor(int x, int y, char c, tcod::ColorRGB color, std::string name, bool block_mov, int ai_type, Fighter fighter, int rend_ord,const Inventory& inv) : Entity(x, y, c, color, name, block_mov, rend_ord), ai_(nullptr), fighter_(fighter), inv_(inv) {
+	Actor(int x, int y, char c, tcod::ColorRGB color, std::string name, bool block_mov, int ai_type, Fighter fighter, int rend_ord,const Inventory& inv, Level level) : Entity(x, y, c, color, name, block_mov, rend_ord), ai_(nullptr), fighter_(fighter), inv_(inv), level_(this, level) {
 		fighter_.SetEntity(this);
 		inv_.SetOwner(this);
 		ai_ = GetAIType(ai_type, *this);
 	};
-	Actor(const Actor& actor) : Entity(actor.x_, actor.y_, actor.char_, actor.color_, actor.name_, actor.block_mov_, actor.rend_ord_), ai_(nullptr), fighter_(actor.fighter_), inv_(actor.inv_){
+	Actor(const Actor& actor) : Entity(actor.x_, actor.y_, actor.char_, actor.color_, actor.name_, actor.block_mov_, actor.rend_ord_), ai_(nullptr), fighter_(actor.fighter_), inv_(actor.inv_), level_(actor.level_){
 		if (actor.ai_) {
 			int ai_type = actor.ai_->GetAiType();
 			ai_ = GetAIType(ai_type, *this);
 		}
 		fighter_.SetEntity(this);
+		level_.SetActor(this);
 	};
 
 	Actor& operator=(const Actor& other) { 
@@ -81,6 +83,8 @@ public:
 	void Die() { fighter_.Die(*this); };
 	Fighter& GetFighter() { return fighter_; };
 	[[nodiscard]] Inventory& GetInventory() { return inv_; };
+	Level GetLevel() const { return level_; };
+
 	friend std::ostream& operator<<(std::ostream& os, const Actor& actor);
 	friend std::istream& operator>>(std::istream& is, Actor& actor);
 
@@ -88,4 +92,5 @@ protected:
 	std::unique_ptr<BaseAI> ai_;
 	Fighter fighter_;
 	Inventory inv_;
+	Level level_;
 };

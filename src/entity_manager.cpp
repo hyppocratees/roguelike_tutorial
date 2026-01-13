@@ -67,7 +67,7 @@ void EntityManager::ClearNPC()
 			entities_.begin(),
 			entities_.end(),
 			[](const Entity& entity) {
-				return entity.GetName() != "player"; // Garde seulement "player"
+				return entity.GetName() != "player";
 			}
 		),
 		entities_.end()

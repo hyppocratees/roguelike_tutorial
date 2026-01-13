@@ -21,6 +21,10 @@ public:
 	void Die(Actor& actor);
 	int Heal(int amount);
 	void TakeDamage(int amount) { hp_ -= amount; };
+	void GainMaxHp(int amount) { max_hp_ += amount; };
+	void GainPower(int amount) { power_ += amount; };
+	void GainDefense(int amount) { defense_ += amount; };
+
 	friend std::ostream& operator<<(std::ostream& os, const Fighter& fighter);
 	friend std::istream& operator>>(std::istream& is, Fighter& fighter);
 private:

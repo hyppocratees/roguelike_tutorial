@@ -61,3 +61,10 @@ void Renderer::RenderNamesAtMouseLocation(const Engine& engine, int x, int y)
 	std::string names = GetNamesAtLocation(mouse_loc.first,mouse_loc.second, engine);
 	tcod::print(engine.GetConsole(), { x, y }, names, white, black);
 }
+
+void Renderer::RenderDungeonLevel(const Engine& engine, int dungeon_level, int x, int y)
+{
+	std::string text = std::format("dungeon level : {}", dungeon_level);
+	tcod::print(engine.GetConsole(), { x, y }, text, white, black);
+}
+
