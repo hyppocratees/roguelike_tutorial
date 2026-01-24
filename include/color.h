@@ -6,6 +6,7 @@ constexpr tcod::ColorRGB white{ 0xFF, 0xFF, 0xFF };
 constexpr tcod::ColorRGB black{ 0x0, 0x0, 0x0 };
 constexpr tcod::ColorRGB red{ 0xFF, 0x0, 0x0 };
 constexpr tcod::ColorRGB yellow{ 255, 255, 0 };
+constexpr tcod::ColorRGB lightazure{ 116, 187, 251 };
 constexpr tcod::ColorRGB player_atk{ 0xE0, 0xE0, 0xE0 };
 constexpr tcod::ColorRGB enemy_atk{ 0xFF, 0xC0, 0xC0 };
 constexpr tcod::ColorRGB player_die{ 0xFF, 0x30, 0x30 };

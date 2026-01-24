@@ -464,3 +464,48 @@ HANDLER PopupMessage::Type() const
 {
 	return POPUP;
 }
+
+HANDLER LevelUpEventHandler::Type() const
+{
+	return LEVELUP;
+}
+
+void LevelUpEventHandler::OnRender(tcod::Console& console) {
+	int x = 0;
+	if (engine_.GetPlayer()->GetPos().first <= 30) {
+		x = 40;
+	}
+	TCOD_console_rect(console.get(), x, 0, 35, 8, true, TCOD_BKGND_NONE);
+	tcod::print(console, { x + 1, 0 }, "LEVEL UP", lightazure, black);
+	tcod::print(console, { x + 1, 1 }, "Congratulations! You level up!", yellow, black);
+	tcod::print(console, { x + 1, 2 }, "Select an attribute to increase.", yellow, black);
+	tcod::print(console, { x + 1, 4 }, "a) Constitution (+20 HP)", yellow, black);
+	tcod::print(console, { x + 1, 5 }, "b) Strength (+1 attack)", yellow, black);
+	tcod::print(console, { x + 1, 6 }, "c) Agility (+1 defense)", yellow, black);
+}
+
+std::unique_ptr<Action> LevelUpEventHandler::EvKeydown(const SDL_Event& event) const {
+	std::unique_ptr<Action> game_event{ nullptr };
+
+	switch (event.key.key) {
+	case SDLK_A:
+		engine_.GetPlayer()->GetLevel().IncreaseMaxHp(engine_, 20);
+		return std::make_unique<ReturnToMainGame>();
+		break;
+	case SDLK_B:
+		engine_.GetPlayer()->GetLevel().IncreasePower(engine_, 1);
+		return std::make_unique<ReturnToMainGame>();
+		break;
+	case SDLK_C:
+		engine_.GetPlayer()->GetLevel().IncreaseDefense(engine_, 1);
+		return std::make_unique<ReturnToMainGame>();
+		break;
+	default:
+		engine_.AddMessage("invalid entry", white, false);
+	}
+	return game_event;
+}
+
+std::unique_ptr<EventHandler> LevelUpEventHandler::Clone() const {
+	return std::make_unique<LevelUpEventHandler>(*this);
+}

@@ -58,7 +58,8 @@ private:
 class AskUserEventHandler : public EventHandler {
 public:
 	AskUserEventHandler(Engine& engine);
-	virtual std::unique_ptr<EventHandler> Clone() const;
+	virtual std::unique_ptr<EventHandler> Clone() const;	
+	virtual void OnRender(tcod::Console&) {};
 	virtual HANDLER Type() const;
 protected:
 	virtual std::unique_ptr<Action> EvKeydown(const SDL_Event& event) const;
@@ -150,11 +151,23 @@ public:
 	PopupMessage(Engine& engine, std::string text, std::unique_ptr<EventHandler>& parent_handler) : EventHandler(engine), text_(text), parent_handler_(std::move(parent_handler)) {};
 	PopupMessage(const PopupMessage& popupmessage) : EventHandler(popupmessage.engine_), text_(popupmessage.text_), parent_handler_(popupmessage.parent_handler_->Clone()) {}
 	
-	virtual std::unique_ptr<EventHandler> Clone() const;
-	virtual std::unique_ptr<Action> EvKeydown(const SDL_Event& event) const;
 	virtual void OnRender(tcod::Console& console); 
+	virtual std::unique_ptr<EventHandler> Clone() const;
 	virtual HANDLER Type() const;
+protected:
+	virtual std::unique_ptr<Action> EvKeydown(const SDL_Event& event) const;
 private:
 	std::string text_; 
 	std::unique_ptr<EventHandler> parent_handler_;
 };
+
+class LevelUpEventHandler : public AskUserEventHandler {
+public:
+	LevelUpEventHandler(Engine& engine) : AskUserEventHandler(engine) {};
+	virtual void OnRender(tcod::Console& cons);
+	virtual HANDLER Type() const;
+	virtual std::unique_ptr<EventHandler> Clone() const;
+protected:
+	virtual std::unique_ptr<Action> EvKeydown(const SDL_Event& event) const;
+};
+

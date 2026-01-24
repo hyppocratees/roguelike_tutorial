@@ -22,7 +22,8 @@ enum HANDLER{
 	POPUP,
 	MAINMENU,
 	SINGLERANGE,
-	AREARANGE
+	AREARANGE,
+	LEVELUP
 };
 
 class HandlerFactory {

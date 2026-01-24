@@ -102,6 +102,9 @@ void DieAction::Perform(Engine& engine) const {
 	}
 	engine.AddMessage(death_message, death_color);
 	engine.GetPlayer()->GetLevel().GainXp(engine, entity_.GetLevel().GetXp());
+	if (engine.GetPlayer()->GetLevel().CanLevelUp()) {
+		engine.SetEventHandler(std::make_unique<LevelUpEventHandler>(engine));
+	}
 	//entity_.Die();
 
 }

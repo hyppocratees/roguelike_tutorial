@@ -83,7 +83,7 @@ public:
 	void Die() { fighter_.Die(*this); };
 	Fighter& GetFighter() { return fighter_; };
 	[[nodiscard]] Inventory& GetInventory() { return inv_; };
-	Level GetLevel() const { return level_; };
+	Level& GetLevel() { return level_; };
 
 	friend std::ostream& operator<<(std::ostream& os, const Actor& actor);
 	friend std::istream& operator>>(std::istream& is, Actor& actor);
