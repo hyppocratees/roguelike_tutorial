@@ -27,7 +27,7 @@ Engine NewGame(tcod::Console& console, TCOD_ContextParams& params)
 
 }
 
-void MainMenu::OnRender(tcod::Console& console) {
+void MainMenu::OnRender(tcod::Console& console) const{
     tcod::draw_quartergraphics(console, background_);
     //background_.blit2x(console, 0, 0);
     tcod::print(console, { console.get_width() / 2, console.get_height() / 2 - 4 }, "TOMB OF THE ANCIENT KINGS", menu_title, black, TCOD_CENTER, TCOD_BKGND_NONE);

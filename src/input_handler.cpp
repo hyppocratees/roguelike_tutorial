@@ -105,6 +105,9 @@ std::unique_ptr<Action> MainGameEventHandler::EvKeydown(const SDL_Event& event) 
 	case SDLK_L:
 		engine_.SetEventHandler(std::make_unique<LookHandler>(engine_));
 		break;	
+	case SDLK_C:
+		engine_.SetEventHandler(std::make_unique<CharacterScreenHandler>(engine_));
+		break;
 	case SDLK_LESS:
 		if (event.key.mod & SDL_KMOD_SHIFT){
 			action = std::make_unique<TakeDownStairAction>();
@@ -144,7 +147,7 @@ std::unique_ptr<Action> GameOverEventHandler::EvKeydown(const SDL_Event& event) 
 
 HistoryViewerHandler::HistoryViewerHandler(Engine& engine) : EventHandler(engine), log_length_(engine.GetMessage().GetMessage().size()), cursor_(log_length_ - 1) {};
 
-void HistoryViewerHandler::OnRender(tcod::Console& cons) {
+void HistoryViewerHandler::OnRender(tcod::Console& cons) const {
 	tcod::Console log_console{ cons.get_width() - 6, cons.get_height() - 6 };
 	tcod::draw_frame(log_console, { 0, 0, log_console.get_width(), log_console.get_height() }, { 0, 1, 2, 3, 4, 5, 6, 7, 8 }, { {255, 255, 255} }, { {0, 0, 0} });
 	tcod::print_rect(log_console, { 0, 0, log_console.get_width(), 1 }, "┤Message history├", { {255, 255, 255} }, { {0, 0, 0} }, TCOD_CENTER);
@@ -230,7 +233,7 @@ std::unique_ptr<EventHandler> InventoryEventHandler::Clone() const {
 	return std::make_unique<InventoryEventHandler>(*this);
 }
 
-void InventoryEventHandler::OnRender(tcod::Console& cons) {
+void InventoryEventHandler::OnRender(tcod::Console& cons) const {
 	Inventory& inv = engine_.GetPlayer()->GetInventory();
 	int number_of_item = inv.Size();
 	int height = number_of_item + 2;
@@ -308,7 +311,7 @@ SelectIndexHandler::SelectIndexHandler(Engine& engine) : AskUserEventHandler(eng
 	engine_.SetMouseLocation(engine_.GetPlayer()->GetPos());
 }
 
-void SelectIndexHandler::OnRender(tcod::Console& console) {
+void SelectIndexHandler::OnRender(tcod::Console& console) const {
 	console.at(mouse_location_.first, mouse_location_.second).bg = white;
 	console.at(mouse_location_.first, mouse_location_.second).fg = black;
 }
@@ -376,7 +379,7 @@ std::unique_ptr<EventHandler> AreaRangedAttackHandler::Clone() const {
 	return std::make_unique<AreaRangedAttackHandler>(*this);
 }
 
-void AreaRangedAttackHandler::OnRender(tcod::Console& console) {
+void AreaRangedAttackHandler::OnRender(tcod::Console& console) const {
 	int x = engine_.GetMouseLocation().first;
 	int y = engine_.GetMouseLocation().second;
 	tcod::draw_frame(console, { x - radius_ - 1, y - radius_ - 1, radius_ * radius_, radius_ * radius_ }, { ' ', '-', ' ', '|', ' ', '|', ' ', '-', ' ' }, red, std::nullopt, TCOD_BKGND_NONE, false);
@@ -392,7 +395,7 @@ std::unique_ptr<EventHandler> PopupMessage::Clone() const {
 	return std::make_unique<PopupMessage>(*this);
 }
 
-void PopupMessage::OnRender(tcod::Console& console) {
+void PopupMessage::OnRender(tcod::Console& console) const {
 	parent_handler_->OnRender(console);
 	for (auto& tile : console) {
 		tile.fg.r /= 8;
@@ -470,12 +473,17 @@ HANDLER LevelUpEventHandler::Type() const
 	return LEVELUP;
 }
 
-void LevelUpEventHandler::OnRender(tcod::Console& console) {
+HANDLER CharacterScreenHandler::Type() const
+{
+	return CHARACTERSCREEN;
+}
+
+void LevelUpEventHandler::OnRender(tcod::Console& console) const {
 	int x = 0;
 	if (engine_.GetPlayer()->GetPos().first <= 30) {
 		x = 40;
 	}
-	TCOD_console_rect(console.get(), x, 0, 35, 8, true, TCOD_BKGND_NONE);
+	TCOD_console_draw_rect_rgb(console.get(), x, 0, 35, 8, 0, NULL, NULL, TCOD_BKGND_NONE);
 	tcod::print(console, { x + 1, 0 }, "LEVEL UP", lightazure, black);
 	tcod::print(console, { x + 1, 1 }, "Congratulations! You level up!", yellow, black);
 	tcod::print(console, { x + 1, 2 }, "Select an attribute to increase.", yellow, black);
@@ -508,4 +516,22 @@ std::unique_ptr<Action> LevelUpEventHandler::EvKeydown(const SDL_Event& event) c
 
 std::unique_ptr<EventHandler> LevelUpEventHandler::Clone() const {
 	return std::make_unique<LevelUpEventHandler>(*this);
+}
+
+void CharacterScreenHandler::OnRender(tcod::Console& console) const {
+	int x = 0;
+	if (engine_.GetPlayer()->GetPos().first <= 30) {
+		x = 40;
+	}
+	TCOD_console_rect(console.get(), x, 0, 25, 7, true, TCOD_BKGND_NONE);
+	tcod::print(console, { x + 1, 0 }, "Character information", lightazure, black);
+	tcod::print(console, { x + 1, 1 }, std::format("Level : {}", engine_.GetPlayer()->GetLevel().GetLevel()), white, black);
+	tcod::print(console, { x + 1, 2 }, std::format("xp : {}", engine_.GetPlayer()->GetLevel().GetCXp()), white, black);
+	tcod::print(console, { x + 1, 3 }, std::format("xp for next level: {}", engine_.GetPlayer()->GetLevel().XpToNextLevel()), white, black);
+	tcod::print(console, { x + 1, 4 }, std::format("attack : {}", engine_.GetPlayer()->GetPower()), white, black);
+	tcod::print(console, { x + 1, 5 }, std::format("Defense : {}", engine_.GetPlayer()->GetDefense()), white, black);
+}
+
+std::unique_ptr<EventHandler> CharacterScreenHandler::Clone() const {
+	return std::make_unique<CharacterScreenHandler>(*this);
 }

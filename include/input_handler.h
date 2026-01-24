@@ -14,7 +14,7 @@ class EventHandler {
 public:
 	EventHandler(Engine& engine) : engine_(engine) {}
 	virtual std::unique_ptr<Action> Dispatch() const;
-	virtual void OnRender(tcod::Console&) {};
+	virtual void OnRender(tcod::Console&) const {};
 	virtual std::unique_ptr<EventHandler> Clone() const = 0;
 	virtual HANDLER Type() const = 0;
 protected:
@@ -45,7 +45,7 @@ protected:
 class HistoryViewerHandler : public EventHandler {
 public:
 	HistoryViewerHandler(Engine& engine);
-	virtual void OnRender(tcod::Console& console);
+	virtual void OnRender(tcod::Console& console) const;
 	virtual std::unique_ptr<EventHandler> Clone() const;
 	virtual HANDLER Type() const;
 protected:
@@ -59,7 +59,7 @@ class AskUserEventHandler : public EventHandler {
 public:
 	AskUserEventHandler(Engine& engine);
 	virtual std::unique_ptr<EventHandler> Clone() const;	
-	virtual void OnRender(tcod::Console&) {};
+	virtual void OnRender(tcod::Console&) const {};
 	virtual HANDLER Type() const;
 protected:
 	virtual std::unique_ptr<Action> EvKeydown(const SDL_Event& event) const;
@@ -69,7 +69,7 @@ class InventoryEventHandler : public AskUserEventHandler {
 public:
 	InventoryEventHandler(Engine& engine);
 	InventoryEventHandler(Engine& engine, std::string title);
-	virtual void OnRender(tcod::Console& console);
+	virtual void OnRender(tcod::Console& console) const;
 	virtual std::unique_ptr<EventHandler> Clone() const;
 	virtual HANDLER Type() const;
 protected:
@@ -102,7 +102,7 @@ class SelectIndexHandler : public AskUserEventHandler {
 public: 
 	SelectIndexHandler(Engine& engine);
 	virtual std::unique_ptr<EventHandler> Clone() const = 0;
-	virtual void OnRender(tcod::Console& console);
+	virtual void OnRender(tcod::Console& console) const;
 protected:
 	virtual std::unique_ptr<Action> EvKeydown(const SDL_Event& event) const;
 	virtual std::unique_ptr<Action> EvMouseMotion(const SDL_Event& event) const;
@@ -137,7 +137,7 @@ class AreaRangedAttackHandler : public SelectIndexHandler {
 public:
 	AreaRangedAttackHandler(Engine& engine, int radius, std::function<void(int, int)> callback) : SelectIndexHandler(engine), radius_(radius), callback_(callback) {};
 	virtual std::unique_ptr<EventHandler> Clone() const;
-	virtual void OnRender(tcod::Console& console); 
+	virtual void OnRender(tcod::Console& console) const; 
 	virtual HANDLER Type() const;
 protected:
 		virtual std::unique_ptr<Action> OnIndexSelected(int x, int y) const;
@@ -151,7 +151,7 @@ public:
 	PopupMessage(Engine& engine, std::string text, std::unique_ptr<EventHandler>& parent_handler) : EventHandler(engine), text_(text), parent_handler_(std::move(parent_handler)) {};
 	PopupMessage(const PopupMessage& popupmessage) : EventHandler(popupmessage.engine_), text_(popupmessage.text_), parent_handler_(popupmessage.parent_handler_->Clone()) {}
 	
-	virtual void OnRender(tcod::Console& console); 
+	virtual void OnRender(tcod::Console& console) const; 
 	virtual std::unique_ptr<EventHandler> Clone() const;
 	virtual HANDLER Type() const;
 protected:
@@ -164,10 +164,17 @@ private:
 class LevelUpEventHandler : public AskUserEventHandler {
 public:
 	LevelUpEventHandler(Engine& engine) : AskUserEventHandler(engine) {};
-	virtual void OnRender(tcod::Console& cons);
+	virtual void OnRender(tcod::Console& cons) const;
 	virtual HANDLER Type() const;
 	virtual std::unique_ptr<EventHandler> Clone() const;
 protected:
 	virtual std::unique_ptr<Action> EvKeydown(const SDL_Event& event) const;
 };
 
+class CharacterScreenHandler : public AskUserEventHandler {
+public:
+	CharacterScreenHandler(Engine& engine) : AskUserEventHandler(engine) {}
+	virtual std::unique_ptr<EventHandler> Clone() const;
+	virtual HANDLER Type() const;
+	virtual void OnRender(tcod::Console& cons) const;
+};

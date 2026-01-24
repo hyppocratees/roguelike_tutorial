@@ -14,7 +14,7 @@ public:
 		background_ = TCODImage("../menu_background.png");
 	};
 	MainMenu(const MainMenu& menu) : EventHandler(menu.engine_), background_(TCODImage("../menu_background.png")){}
-	virtual void OnRender(tcod::Console& console);
+	virtual void OnRender(tcod::Console& console) const;
 	virtual std::unique_ptr<EventHandler> Clone() const;
 	virtual HANDLER Type() const;
 protected:
