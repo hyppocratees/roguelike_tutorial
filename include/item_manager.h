@@ -4,8 +4,10 @@
 
 #include <vector>
 
+
 class RectangleRoom;
 class TCODRandom;
+class GameWorld;
 
 class ItemManager {
 public:
@@ -13,7 +15,7 @@ public:
 
     Item& Spawn(const Item& src);
     Item& Spawn(const Item& src, std::pair<int, int> pos);
-    void PlaceEntities(RectangleRoom& room, int max_item_per_room, TCODRandom& random);
+    void PlaceEntities(RectangleRoom& room, int max_item_per_room, TCODRandom& random, const GameWorld& gw);
     Item& Get(int index) { return items_.at(index); };
     std::vector<Item> Get() { return items_; };
     void Remove(Item& item) { items_.erase(std::remove(items_.begin(), items_.end(), item)); };

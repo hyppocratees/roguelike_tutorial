@@ -20,7 +20,7 @@ Engine::Engine(tcod::Context& context, tcod::Console& console, GameMap& map, Gam
 {
 	gameworld_.GenerateFloor(*map_);
 	entities_.Spawn(PLAYER, map_->GetRoom(0).Center());
-	PlaceEntities();
+	gameworld.PlaceEntities(*this);
 	UpdateFov();
 }
 
@@ -79,19 +79,6 @@ void Engine::Render()
 void Engine::UpdateFov() const
 {
 	map_->UpdateFov(player_->GetX(), player_->GetY(), FOV_RADIUS);
-}
-
-void Engine::PlaceEntities(bool setplayer)
-{
-	TCODRandom random;
-	std::vector<RectangleRoom>& rooms = map_->GetRooms();
-	for (RectangleRoom& room : rooms) {
-		entities_.PlaceEntities(room, MAX_MONSTER_PER_ROOM, random);
-		items_.PlaceEntities(room, MAX_ITEM_PER_ROOM, random);
-	}
-	for (Entity& entity : entities_) entity.SetMap(map_.get());
-	for (Item& item : items_) item.SetMap(map_.get());
-	if(setplayer) player_ = &entities_.Get(0);
 }
 
 void Engine::HandleEnemyTurn()

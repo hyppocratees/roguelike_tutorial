@@ -3,9 +3,11 @@
 #include <utility>
 #include <fstream>
 
+
 class Actor;
 class RectangleRoom;
 class TCODRandom;
+class GameWorld;
 
 class EntityManager {
 public:
@@ -13,7 +15,7 @@ public:
 
     Actor& Spawn(const Actor& src);
     Actor& Spawn(const Actor& src, std::pair<int, int> pos);
-    void PlaceEntities(RectangleRoom& room, int max_monster_per_room, TCODRandom& random);
+    void PlaceEntities(RectangleRoom& room, int max_monster_per_room, TCODRandom& random, const GameWorld& gw);
     Actor* GetBlockingEntity(int x, int y);
     Actor& Get(int index) { return entities_.at(index); };
     std::vector<Actor> Get() { return entities_; };

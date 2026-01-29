@@ -1,6 +1,7 @@
 #include "item_manager.h"
 #include "procgen.h"
 #include "entity_factory.h"
+#include "gameworld.h"
 
 #include <utility>
 #include <libtcod/mersenne.hpp>
@@ -19,17 +20,16 @@ Item& ItemManager::Spawn(const Item& src, std::pair<int, int> pos) {
 }
 
 
-void ItemManager::PlaceEntities(RectangleRoom& room, int max_item_per_room, TCODRandom& random) {
-	int num_monster = random.getInt(0, max_item_per_room);
-	for (int i = 0; i < num_monster; ++i) {
+void ItemManager::PlaceEntities(RectangleRoom& room, int max_item_per_room, TCODRandom& random, const GameWorld& gw) {
+	int num_item = random.getInt(0, max_item_per_room);
+
+	std::vector<Item> items = gw.GetItemAtRandom(num_item);
+
+	for (int i = 0; i < num_item; ++i) {
 		int x = random.getInt(room.GetX1() + 1, room.GetX2() - 1);
 		int y = random.getInt(room.GetY1() + 1, room.GetY2() - 1);
 
-		float item_chance = random.getFloat(0, 1);
-		if (item_chance <= 0.7) Spawn(HEALTH_POTION, { x, y });
-		else if (item_chance <= 0.8) Spawn(FIREBALL_SCROLL, { x, y });
-		else if (item_chance <= 0.9) Spawn(CONFUSION_SCROLL, { x, y });
-		else Spawn(LIGHTNING_SCROLL, { x, y });
+		Spawn(items.at(i), { x, y });
 		
 	}
 }

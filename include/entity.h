@@ -27,6 +27,9 @@ public:
 	virtual int GetRendOrd() const { return rend_ord_; };
 	virtual void SetRendOrd(int rend_ord) { rend_ord_ = rend_ord; };
 	virtual float Distance(int x, int y) const;
+
+	bool operator<(const Entity& rhs) const;
+
 protected:
 	int x_;
 	int y_;

@@ -137,6 +137,7 @@ std::istream& operator>>(std::istream& is, GameMap& map) {
 		case 2:
 			map.tiles_.at(index) = tdownstairs;
 			map.map_.setProperties(pos_x, pos_y, tdownstairs.transparent, tdownstairs.walkable);
+			map.downstair_loc_ = { pos_x, pos_y };
 			break;
 		case 1:
 		default:

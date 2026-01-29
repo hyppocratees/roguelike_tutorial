@@ -19,6 +19,7 @@ std::ostream& operator<<(std::ostream& os, const Actor& ac) {
     os << ac.inv_ << "\n";
     os << ac.rend_ord_ << "\n";
     os << ac.color_ << "\n";
+    os << ac.level_ << "\n";
     return os;
 }
 
@@ -67,5 +68,6 @@ std::istream& operator>>(std::istream& is, Actor& ac) {
     ac.inv_.SetOwner(&ac);
     is >> ac.rend_ord_;
     is >> ac.color_;
+    is >> ac.level_;
     return is;
 }

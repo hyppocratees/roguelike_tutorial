@@ -161,7 +161,7 @@ void TakeDownStairAction::Perform(Engine& engine) const {
 		engine.GetGameWorld().GenerateFloor(*engine.GetMap());
 		engine.GetEntities().ClearNPC();
 		engine.GetItem().Clear();
-		engine.PlaceEntities();
+		engine.GetGameWorld().PlaceEntities(engine);
 		engine.AddMessage("You descend the staircase", descend);
 		engine.GetPlayer()->SetX(engine.GetMap()->GetRoom(0).Center().first);
 		engine.GetPlayer()->SetY(engine.GetMap()->GetRoom(0).Center().second);

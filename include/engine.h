@@ -39,7 +39,6 @@ public:
 	void Quit() { isrunning_ = false; };
 
 	void UpdateFov() const;
-	void PlaceEntities(bool setplayer = true);
 	void HandleEnemyTurn();
 	void HandleDeath();
 	Actor* GetPlayer() { return player_; };

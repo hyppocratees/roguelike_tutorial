@@ -4,6 +4,7 @@
 #include <libtcod/mersenne.hpp>
 #include "procgen.h"
 #include "entity_factory.h"
+#include "gameworld.h"
 
 #include <iostream>
 #include <fstream>
@@ -24,18 +25,19 @@ Actor& EntityManager::Spawn(const Actor& src, std::pair<int, int> pos)
 	return entity;
 }
 
-void EntityManager::PlaceEntities(RectangleRoom& room, int max_monster_per_room, TCODRandom& random)
+void EntityManager::PlaceEntities(RectangleRoom& room, int max_monster_per_room, TCODRandom& random, const GameWorld& gw)
 {
 	int num_monster = random.getInt(0, max_monster_per_room);
-	//std::cout << num_monster << " " << max_monster_per_room << std::endl;
+
+	std::vector<Actor> actors = gw.GetEntityAtRandom(num_monster);
+
+
 	for (int i = 0; i < num_monster; ++i) {
 		int x = random.getInt(room.GetX1() + 1, room.GetX2() - 1);
 		int y = random.getInt(room.GetY1() + 1, room.GetY2() - 1);
 
-		if (GetBlockingEntity(x, y)) continue;
-		if (random.getFloat(0, 1) < 0.8) Spawn(ORC, {x, y});
-		else Spawn(TROLL, {x, y});
- 
+		Spawn(actors.at(i), { x, y });
+
 	}
 }
 
